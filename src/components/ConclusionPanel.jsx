@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
 import { DEBATE_STATUS } from '../hooks/useDebateOrchestrator';
 
-function RoundCard({ round }) {
+function RoundCard({ round, enabledAIs }) {
   return (
     <div className="round-card">
       <div className="round-card-header">
         <span>⚡</span>
         {round.label}
       </div>
-      <div className="round-entry">
-        <div className="round-entry-label chatgpt">🤖 ChatGPT</div>
-        <div className="round-entry-text">{round.chatgpt}</div>
-      </div>
-      <div className="glow-divider" />
-      <div className="round-entry">
-        <div className="round-entry-label gemini">✨ Gemini</div>
-        <div className="round-entry-text">{round.gemini}</div>
-      </div>
-      <div className="glow-divider" />
-      <div className="round-entry">
-        <div className="round-entry-label deepseek" style={{ color: 'var(--deepseek-color)' }}>🐳 DeepSeek</div>
-        <div className="round-entry-text">{round.deepseek}</div>
-      </div>
+      {enabledAIs?.chatgpt && (
+        <div className="round-entry">
+          <div className="round-entry-label chatgpt">🤖 ChatGPT</div>
+          <div className="round-entry-text">{round.chatgpt}</div>
+        </div>
+      )}
+      {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek) && <div className="glow-divider" />}
+      {enabledAIs?.gemini && (
+        <div className="round-entry">
+          <div className="round-entry-label gemini">✨ Gemini</div>
+          <div className="round-entry-text">{round.gemini}</div>
+        </div>
+      )}
+      {enabledAIs?.gemini && enabledAIs?.deepseek && <div className="glow-divider" />}
+      {enabledAIs?.deepseek && (
+        <div className="round-entry">
+          <div className="round-entry-label deepseek" style={{ color: 'var(--deepseek-color)' }}>🐳 DeepSeek</div>
+          <div className="round-entry-text">{round.deepseek}</div>
+        </div>
+      )}
     </div>
   );
 }
 
 
-function VotePanel({ onVote, winner }) {
+function VotePanel({ onVote, winner, enabledAIs }) {
   if (winner) {
     const isGPT = winner === 'chatgpt';
     const isGemini = winner === 'gemini';
@@ -86,62 +92,68 @@ function VotePanel({ onVote, winner }) {
         Who made the better argument?
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          id="vote-chatgpt-btn"
-          onClick={() => onVote('chatgpt')}
-          style={{
-            flex: 1, padding: '10px 6px', borderRadius: 10,
-            border: '1px solid rgba(16,163,127,0.4)',
-            background: 'rgba(16,163,127,0.1)',
-            color: 'var(--chatgpt-color)', cursor: 'pointer',
-            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,163,127,0.22)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,163,127,0.1)'}
-        >
-          🤖 GPT
-        </button>
-        <button
-          id="vote-gemini-btn"
-          onClick={() => onVote('gemini')}
-          style={{
-            flex: 1, padding: '10px 6px', borderRadius: 10,
-            border: '1px solid rgba(74,144,217,0.4)',
-            background: 'rgba(74,144,217,0.1)',
-            color: 'var(--gemini-color)', cursor: 'pointer',
-            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,144,217,0.22)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,144,217,0.1)'}
-        >
-          ✨ Gemini
-        </button>
-        <button
-          id="vote-deepseek-btn"
-          onClick={() => onVote('deepseek')}
-          style={{
-            flex: 1, padding: '10px 6px', borderRadius: 10,
-            border: '1px solid rgba(77,107,254,0.4)',
-            background: 'rgba(77,107,254,0.1)',
-            color: 'var(--deepseek-color)', cursor: 'pointer',
-            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(77,107,254,0.22)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(77,107,254,0.1)'}
-        >
-          🐳 DeepSeek
-        </button>
+        {enabledAIs?.chatgpt && (
+          <button
+            id="vote-chatgpt-btn"
+            onClick={() => onVote('chatgpt')}
+            style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10,
+              border: '1px solid rgba(16,163,127,0.4)',
+              background: 'rgba(16,163,127,0.1)',
+              color: 'var(--chatgpt-color)', cursor: 'pointer',
+              fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,163,127,0.22)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,163,127,0.1)'}
+          >
+            🤖 GPT
+          </button>
+        )}
+        {enabledAIs?.gemini && (
+          <button
+            id="vote-gemini-btn"
+            onClick={() => onVote('gemini')}
+            style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10,
+              border: '1px solid rgba(74,144,217,0.4)',
+              background: 'rgba(74,144,217,0.1)',
+              color: 'var(--gemini-color)', cursor: 'pointer',
+              fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,144,217,0.22)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,144,217,0.1)'}
+          >
+            ✨ Gemini
+          </button>
+        )}
+        {enabledAIs?.deepseek && (
+          <button
+            id="vote-deepseek-btn"
+            onClick={() => onVote('deepseek')}
+            style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10,
+              border: '1px solid rgba(77,107,254,0.4)',
+              background: 'rgba(77,107,254,0.1)',
+              color: 'var(--deepseek-color)', cursor: 'pointer',
+              fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(77,107,254,0.22)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(77,107,254,0.1)'}
+          >
+            🐳 DeepSeek
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasVerdict }) {
+function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasVerdict, enabledAIs }) {
   return (
     <div className="conclusion-final-card" style={{ flexShrink: 0 }}>
       <div className="conclusion-final-title">🏆 Debate Complete — {rounds.length} Round{rounds.length !== 1 ? 's' : ''}</div>
       <div className="conclusion-final-text">
-        Both AIs have exchanged their arguments. Scroll down to read the full transcript.
+        The AIs have exchanged their arguments. Scroll down to read the full transcript.
       </div>
 
       {/* Get Final Verdict button */}
@@ -160,7 +172,7 @@ function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasV
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(199,125,255,0.25)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(199,125,255,0.12)'}
         >
-          🏁 Request Final Verdict from Both AIs
+          🏁 Request Final Verdict from Participants
         </button>
       )}
       {hasVerdict && (
@@ -170,13 +182,13 @@ function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasV
       )}
 
       <div style={{ borderTop: '1px solid rgba(199,125,255,0.2)', paddingTop: 12, marginTop: 4 }}>
-        <VotePanel onVote={onVote} winner={winner} />
+        <VotePanel onVote={onVote} winner={winner} enabledAIs={enabledAIs} />
       </div>
     </div>
   );
 }
 
-export default function ConclusionPanel({ status, rounds, onRequestConclusion }) {
+export default function ConclusionPanel({ status, rounds, onRequestConclusion, enabledAIs }) {
   const [winner, setWinner] = useState(null);
 
   const isDebating = status !== DEBATE_STATUS.IDLE && status !== DEBATE_STATUS.COMPLETE;
@@ -227,23 +239,24 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion })
             winner={winner}
             onRequestConclusion={onRequestConclusion}
             hasVerdict={hasVerdict}
+            enabledAIs={enabledAIs}
           />
         )}
 
 
         {rounds.length > 0 && (
           <>
-            <div className="debate-vs">
-              <span style={{ color: 'var(--chatgpt-color)' }}>ChatGPT</span>
-              &nbsp;⚔️&nbsp;
-              <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>
-              &nbsp;⚔️&nbsp;
-              <span style={{ color: 'var(--deepseek-color)' }}>DeepSeek</span>
+            <div className="debate-vs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '4px' }}>
+              {enabledAIs?.chatgpt && <span style={{ color: 'var(--chatgpt-color)' }}>ChatGPT</span>}
+              {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek) && <span>&nbsp;⚔️&nbsp;</span>}
+              {enabledAIs?.gemini && <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>}
+              {enabledAIs?.gemini && enabledAIs?.deepseek && <span>&nbsp;⚔️&nbsp;</span>}
+              {enabledAIs?.deepseek && <span style={{ color: 'var(--deepseek-color)' }}>DeepSeek</span>}
               <span style={{ color: 'var(--text-muted)', fontSize: 10, marginLeft: 4 }}>— click a round to expand</span>
             </div>
 
             {rounds.map((r) => (
-              <RoundCard key={r.round} round={r} />
+              <RoundCard key={r.round} round={r} enabledAIs={enabledAIs} />
             ))}
           </>
         )}

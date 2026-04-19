@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback, forwardRef } from 'react';
 
 const WebviewPanel = forwardRef(function WebviewPanel(
-  { id, name, icon, colorClass, url, partition, aiStatus },
+  { id, name, icon, colorClass, url, partition, aiStatus, enabled = true, onToggle },
   forwardedRef
 ) {
   const [loading, setLoading] = useState(true);
@@ -42,11 +42,19 @@ const WebviewPanel = forwardRef(function WebviewPanel(
   }[aiStatus] || 'Ready';
 
   return (
-    <div className="panel">
+    <div className="panel" style={{ opacity: enabled ? 1 : 0.6, transition: 'opacity 0.2s' }}>
       <div className={`panel-header ${colorClass}`}>
         <div className="panel-title-row">
           <div className={`ai-icon ${colorClass}`}>{icon}</div>
-          <span className="panel-name">{name}</span>
+          <span className="panel-name" style={{ marginRight: 8 }}>{name}</span>
+          <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            <input 
+              type="checkbox" 
+              checked={enabled} 
+              onChange={onToggle} 
+              style={{ accentColor: `var(--${colorClass}-color)`, cursor: 'pointer', margin: 0 }}
+            />
+          </label>
         </div>
         <div className={`status-pill ${aiStatus}`}>
           <span className="status-dot" />
@@ -59,7 +67,14 @@ const WebviewPanel = forwardRef(function WebviewPanel(
       </div>
 
       <div className="webview-wrap">
-        {loading && (
+        {!enabled && (
+          <div className="webview-overlay" style={{ background: 'rgba(10,10,18,0.6)', backdropFilter: 'blur(4px)', pointerEvents: 'all' }}>
+            <p className="overlay-text" style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)' }}>
+              {name} is disabled
+            </p>
+          </div>
+        )}
+        {loading && enabled && (
           <div className="webview-overlay">
             <div className="overlay-spinner" />
             <p className="overlay-text">

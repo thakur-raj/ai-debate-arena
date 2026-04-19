@@ -43,8 +43,10 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
         )}
         <div className="round-badge">
           <span style={{ color: 'var(--chatgpt-color)' }}>GPT</span>
-          <span style={{ color: 'var(--text-muted)' }}>vs</span>
+          <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>vs</span>
           <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>
+          <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>vs</span>
+          <span style={{ color: 'var(--deepseek-color, #4d90fe)' }}>DeepSeek</span>
         </div>
         <button 
           onClick={onOpenSettings}

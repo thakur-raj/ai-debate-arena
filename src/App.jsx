@@ -17,9 +17,14 @@ export default function App() {
     detailMode: 1 // 1: short, 0: normal, -1: long
   });
   const [showSettings, setShowSettings] = useState(false);
+  const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true });
+
+  const toggleAI = (aiKey) => {
+    setEnabledAIs(prev => ({ ...prev, [aiKey]: !prev[aiKey] }));
+  };
 
   const { status, rounds, aiStatuses, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters } =
-    useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef);
+    useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enabledAIs);
 
   const handleSend = (prompt) => {
     if (status === DEBATE_STATUS.COMPLETE) reset();
@@ -46,6 +51,8 @@ export default function App() {
           url="https://chatgpt.com"
           partition="persist:chatgpt"
           aiStatus={aiStatuses.chatgpt}
+          enabled={enabledAIs.chatgpt}
+          onToggle={() => toggleAI('chatgpt')}
         />
 
         <WebviewPanel
@@ -57,6 +64,8 @@ export default function App() {
           url="https://gemini.google.com/app"
           partition="persist:gemini"
           aiStatus={aiStatuses.gemini}
+          enabled={enabledAIs.gemini}
+          onToggle={() => toggleAI('gemini')}
         />
 
         <WebviewPanel
@@ -68,12 +77,15 @@ export default function App() {
           url="https://chat.deepseek.com/"
           partition="persist:deepseek"
           aiStatus={aiStatuses.deepseek}
+          enabled={enabledAIs.deepseek}
+          onToggle={() => toggleAI('deepseek')}
         />
 
         <ConclusionPanel
           status={status}
           rounds={rounds}
           onRequestConclusion={requestConclusion}
+          enabledAIs={enabledAIs}
         />
       </div>
 
