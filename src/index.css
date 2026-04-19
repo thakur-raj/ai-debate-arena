@@ -146,7 +146,7 @@ html, body, #root {
 /* ─── Panels Area ─────────────────────────────────────────── */
 .panels-area {
   display: grid;
-  grid-template-columns: 1fr 1fr 380px;
+  grid-template-columns: 1fr 1fr 1fr 340px;
   grid-template-rows: 1fr;      /* Force single row to fill container height */
   gap: 1px;
   flex: 1;
@@ -560,6 +560,15 @@ webview {
 .rounds-btn:hover:not(.active) {
   border-color: var(--border-glow);
   color: var(--text-primary);
+}
+
+.webview-header.gemini {
+  border-bottom-color: rgba(74, 144, 226, 0.3);
+  color: var(--gemini-color);
+}
+.webview-header.deepseek {
+  border-bottom-color: rgba(77, 107, 254, 0.3);
+  color: var(--deepseek-color);
 }
 
 /* ─── Misc ───────────────────────────────────────────────── */

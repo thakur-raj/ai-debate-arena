@@ -22,7 +22,9 @@ function configureSession(ses) {
 
 function createWindow() {
   // Configure webview partition sessions BEFORE the window is created
-  ['persist:chatgpt', 'persist:gemini'].forEach(partition => {
+  const partitions = ['persist:chatgpt', 'persist:gemini', 'persist:deepseek'];
+  
+  partitions.forEach((partition) => {
     configureSession(session.fromPartition(partition));
   });
 

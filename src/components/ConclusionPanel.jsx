@@ -17,6 +17,11 @@ function RoundCard({ round }) {
         <div className="round-entry-label gemini">✨ Gemini</div>
         <div className="round-entry-text">{round.gemini}</div>
       </div>
+      <div className="glow-divider" />
+      <div className="round-entry">
+        <div className="round-entry-label deepseek" style={{ color: 'var(--deepseek-color)' }}>🐳 DeepSeek</div>
+        <div className="round-entry-text">{round.deepseek}</div>
+      </div>
     </div>
   );
 }
@@ -25,18 +30,41 @@ function RoundCard({ round }) {
 function VotePanel({ onVote, winner }) {
   if (winner) {
     const isGPT = winner === 'chatgpt';
+    const isGemini = winner === 'gemini';
+    const isDeepSeek = winner === 'deepseek';
+    
+    let color = 'rgba(74,144,217,0.4)';
+    let bg = 'rgba(74,144,217,0.12)';
+    let text = 'Google Gemini';
+    let icon = '✨';
+    let varColor = 'var(--gemini-color)';
+
+    if (isGPT) {
+      color = 'rgba(16,163,127,0.4)';
+      bg = 'rgba(16,163,127,0.12)';
+      text = 'ChatGPT';
+      icon = '🤖';
+      varColor = 'var(--chatgpt-color)';
+    } else if (isDeepSeek) {
+      color = 'rgba(77,107,254,0.4)';
+      bg = 'rgba(77,107,254,0.12)';
+      text = 'DeepSeek';
+      icon = '🐳';
+      varColor = 'var(--deepseek-color)';
+    }
+
     return (
       <div style={{
         padding: '12px 14px',
         borderRadius: 10,
-        background: isGPT ? 'rgba(16,163,127,0.12)' : 'rgba(74,144,217,0.12)',
-        border: `1px solid ${isGPT ? 'rgba(16,163,127,0.4)' : 'rgba(74,144,217,0.4)'}`,
+        background: bg,
+        border: `1px solid ${color}`,
         display: 'flex', alignItems: 'center', gap: 10,
       }}>
-        <span style={{ fontSize: 22 }}>{isGPT ? '🤖' : '✨'}</span>
+        <span style={{ fontSize: 22 }}>{icon}</span>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: isGPT ? 'var(--chatgpt-color)' : 'var(--gemini-color)' }}>
-            🏆 {isGPT ? 'ChatGPT' : 'Google Gemini'} wins!
+          <div style={{ fontSize: 13, fontWeight: 700, color: varColor }}>
+            🏆 {text} wins!
           </div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
             Your verdict — start a new debate below
@@ -62,31 +90,46 @@ function VotePanel({ onVote, winner }) {
           id="vote-chatgpt-btn"
           onClick={() => onVote('chatgpt')}
           style={{
-            flex: 1, padding: '10px 12px', borderRadius: 10,
+            flex: 1, padding: '10px 6px', borderRadius: 10,
             border: '1px solid rgba(16,163,127,0.4)',
             background: 'rgba(16,163,127,0.1)',
             color: 'var(--chatgpt-color)', cursor: 'pointer',
-            fontSize: 13, fontWeight: 600, transition: 'all 0.15s',
+            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
           }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,163,127,0.22)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,163,127,0.1)'}
         >
-          🤖 ChatGPT
+          🤖 GPT
         </button>
         <button
           id="vote-gemini-btn"
           onClick={() => onVote('gemini')}
           style={{
-            flex: 1, padding: '10px 12px', borderRadius: 10,
+            flex: 1, padding: '10px 6px', borderRadius: 10,
             border: '1px solid rgba(74,144,217,0.4)',
             background: 'rgba(74,144,217,0.1)',
             color: 'var(--gemini-color)', cursor: 'pointer',
-            fontSize: 13, fontWeight: 600, transition: 'all 0.15s',
+            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
           }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,144,217,0.22)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,144,217,0.1)'}
         >
           ✨ Gemini
+        </button>
+        <button
+          id="vote-deepseek-btn"
+          onClick={() => onVote('deepseek')}
+          style={{
+            flex: 1, padding: '10px 6px', borderRadius: 10,
+            border: '1px solid rgba(77,107,254,0.4)',
+            background: 'rgba(77,107,254,0.1)',
+            color: 'var(--deepseek-color)', cursor: 'pointer',
+            fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(77,107,254,0.22)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(77,107,254,0.1)'}
+        >
+          🐳 DeepSeek
         </button>
       </div>
     </div>
@@ -172,7 +215,7 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion })
             <div className="conclusion-empty-icon">⚔️</div>
             <p className="conclusion-empty-text">
               Type a question below and hit <strong>Send</strong>.<br />
-              ChatGPT and Gemini will debate the answer here.
+              ChatGPT, Gemini, and DeepSeek will debate the answer here.
             </p>
           </div>
         )}
@@ -194,6 +237,8 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion })
               <span style={{ color: 'var(--chatgpt-color)' }}>ChatGPT</span>
               &nbsp;⚔️&nbsp;
               <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>
+              &nbsp;⚔️&nbsp;
+              <span style={{ color: 'var(--deepseek-color)' }}>DeepSeek</span>
               <span style={{ color: 'var(--text-muted)', fontSize: 10, marginLeft: 4 }}>— click a round to expand</span>
             </div>
 

@@ -73,49 +73,57 @@ export const chatgptSend = (message) => `
 /** Get current count of assistant messages (used as baseline before sending prompt) */
 export const chatgptGetCount = () => `
 (() => {
-  const selectors = [
-    '[data-message-author-role="assistant"]',
-    '.assistant-message .prose',
-    'article[data-testid^="conversation-turn"] .whitespace-pre-wrap',
-  ];
-  for (const sel of selectors) {
-    const els = document.querySelectorAll(sel);
-    if (els.length > 0) return els.length;
-  }
-  return 0;
+  const els = document.querySelectorAll('[data-message-author-role="assistant"]');
+  if (els.length > 0) return els.length;
+  // Fallback selectors
+  const fallback = document.querySelectorAll('article[data-testid^="conversation-turn-"]');
+  return Math.floor(fallback.length / 2); // every turn has user + assistant, so half
 })()
 `;
 
 /** Poll: Check if ChatGPT has a new response. minCount = number of responses already seen. */
 export const chatgptGetResponse = (minCount) => `
-(async () => {
-  // Still streaming if stop button is visible
-  const stopBtn = document.querySelector(
-    'button[data-testid="stop-button"], button[aria-label="Stop generating"]'
-  );
-  if (stopBtn && stopBtn.offsetParent !== null) return { done: false, text: null };
+(() => {
+  const minCount = ${minCount};
 
-  // Count all assistant messages — we need more than minCount
-  const selectors = [
-    '[data-message-author-role="assistant"]',
-    '.assistant-message .prose',
-    'article[data-testid^="conversation-turn"] .whitespace-pre-wrap',
-  ];
-
-  let messages = [];
-  for (const sel of selectors) {
-    messages = document.querySelectorAll(sel);
-    if (messages.length > 0) break;
+  // Check for stop button — if actively generating, stop button is visible
+  // Be specific: only block if the STOP button is present and visible (not the send button)
+  const stopBtn = document.querySelector('button[data-testid="stop-button"]');
+  if (stopBtn && stopBtn.offsetParent !== null) {
+    return { done: false, text: null, reason: 'stop-btn-visible' };
   }
 
-  if (messages.length <= (${minCount} || 0)) return { done: false, text: null };
+  // Count assistant messages
+  let messages = document.querySelectorAll('[data-message-author-role="assistant"]');
+  if (messages.length === 0) {
+    // Fallback: look for conversation turns and get AI ones
+    const turns = document.querySelectorAll('article[data-testid^="conversation-turn-"]');
+    if (turns.length > 0) {
+      // Filter to only assistant turns (they have [data-message-author-role="assistant"] inside)
+      const assistantTurns = Array.from(turns).filter(t => t.querySelector('[data-message-author-role="assistant"]'));
+      if (assistantTurns.length > minCount) {
+        const last = assistantTurns[assistantTurns.length - 1];
+        const text = (last.innerText || last.textContent || '').trim();
+        if (text && text.length >= 10) return { done: true, text, via: 'turns-fallback' };
+      }
+      return { done: false, text: null, reason: 'turns-count-too-low', found: assistantTurns.length, need: minCount + 1 };
+    }
+    return { done: false, text: null, reason: 'no-messages' };
+  }
+
+  if (messages.length <= minCount) {
+    return { done: false, text: null, reason: 'count-too-low', found: messages.length, need: minCount + 1 };
+  }
 
   const last = messages[messages.length - 1];
   const text = (last.innerText || last.textContent || '').trim();
 
-  if (!text || text.length < 10) return { done: false, text: null };
+  if (!text || text.length < 10) {
+    return { done: false, text: null, reason: 'text-too-short', found: messages.length };
+  }
 
-  return { done: true, text };
+  return { done: true, text, found: messages.length };
 })()
 `;
+
 

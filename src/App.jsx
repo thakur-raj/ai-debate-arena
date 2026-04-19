@@ -9,6 +9,7 @@ import { useDebateOrchestrator, DEBATE_STATUS } from './hooks/useDebateOrchestra
 export default function App() {
   const chatgptRef = useRef(null);
   const geminiRef  = useRef(null);
+  const deepseekRef = useRef(null);
   
   const [settings, setSettings] = useState({
     rounds: 2,
@@ -18,7 +19,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
 
   const { status, rounds, aiStatuses, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters, debugInfo } =
-    useDebateOrchestrator(chatgptRef, geminiRef);
+    useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef);
 
   const handleSend = (prompt) => {
     if (status === DEBATE_STATUS.COMPLETE) reset();
@@ -57,6 +58,17 @@ export default function App() {
           url="https://gemini.google.com/app"
           partition="persist:gemini"
           aiStatus={aiStatuses.gemini}
+        />
+
+        <WebviewPanel
+          ref={deepseekRef}
+          id="deepseek-webview"
+          name="DeepSeek"
+          icon="🐳"
+          colorClass="deepseek"
+          url="https://chat.deepseek.com/"
+          partition="persist:deepseek"
+          aiStatus={aiStatuses.deepseek}
         />
 
         <ConclusionPanel

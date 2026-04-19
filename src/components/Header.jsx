@@ -35,12 +35,15 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
 
       <div className="header-right">
         {debugInfo && (
-          <div style={{ fontSize: '10px', color: '#ff6b6b', fontFamily: 'monospace', textAlign: 'right', marginRight: '10px', display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 'bold', color: debugInfo.active ? '#ff6b6b' : '#6b6b6b' }}>
-              {debugInfo.active ? '[POLLING]' : '[SLEEPING/DONE]'}
+          <div style={{ fontSize: '9px', color: '#ff6b6b', fontFamily: 'monospace', textAlign: 'right', marginRight: '10px', display: 'flex', flexDirection: 'column', gap: '1px', maxWidth: '260px' }}>
+            <span style={{ fontWeight: 'bold', color: debugInfo.active ? '#ff9900' : '#44ff44' }}>
+              {debugInfo.active ? '⏳ POLLING' : '✅ DONE'}
             </span>
-            <span>GPT: {debugInfo.chatgpt}</span>
-            <span>Gem: {debugInfo.gemini}</span>
+            <span style={{ color: '#aaa' }}>GPT: {debugInfo.chatgpt}</span>
+            <span style={{ color: '#aaa' }}>Gem: {debugInfo.gemini}</span>
+            <span style={{ color: debugInfo.active && debugInfo.deepseek?.includes('why:') ? '#ff6b6b' : '#aaa' }}>
+              DSK: {debugInfo.deepseek || 'waiting...'}
+            </span>
           </div>
         )}
         {isDebating && (
