@@ -111,6 +111,17 @@ Contributions, issues, and feature requests are welcome!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## ⚠️ Disclaimer & Terms of Use
+
+**This is an independent, open-source educational project.** 
+
+- **No Affiliation:** This project is not affiliated with, endorsed by, or sponsored by OpenAI, Google, or DeepSeek. 
+- **Trademarks:** "ChatGPT", "Google Gemini", and "DeepSeek" are trademarks of their respective owners.
+- **Terms of Service:** This application automates web browser interactions (DOM scraping and UI automation). Using this software may violate the Terms of Service of OpenAI, Google, or DeepSeek. By using or modifying this codebase, you assume all risks associated with your accounts, including but not limited to account suspension, banning, or rate-limiting.
+- **Liability:** The author(s) of this project assume **zero liability** for any damages, account bans, or legal repercussions resulting from the use of this software. The code is provided strictly for educational purposes to demonstrate Electron webview capabilities and React state machines.
+
 ## 📝 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is distributed under the **MIT License**. You are free to use, modify, and distribute this software, subject to the conditions of the license. 
+
+See the [`LICENSE`](LICENSE) file for more information.
