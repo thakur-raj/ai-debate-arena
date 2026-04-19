@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { chatgptSend, chatgptGetResponse, chatgptGetCount } from '../utils/chatgptInjector';
 import { geminiClickInput, geminiClickSend, geminiGetResponse, geminiGetCount } from '../utils/geminiInjector';
 import { deepseekClickInput, deepseekClickSend, deepseekGetResponse, deepseekGetCount } from '../utils/deepseekInjector';
+import { perplexityClickInput, perplexityClickSend, perplexityGetResponse, perplexityGetCount } from '../utils/perplexityInjector';
 
 export const DEBATE_STATUS = {
   IDLE: 'idle',
@@ -15,14 +16,19 @@ export const DEBATE_STATUS = {
 const POLL_INTERVAL_MS = 2000;
 const STABILITY_CHECKS = 2; // response must be stable for N polls before accepted
 
-export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enabledAIs) {
+export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perplexityRef, enabledAIs) {
   const [status, setStatus] = useState(DEBATE_STATUS.IDLE);
   const [rounds, setRounds] = useState([]);
-  const [aiStatuses, setAiStatuses] = useState({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle' });
+  const [aiStatuses, setAiStatuses] = useState({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle', perplexity: 'idle' });
   const [error, setError] = useState(null);
 
   const pollerRef = useRef(null);
-  const stabilityRef = useRef({ chatgpt: { text: null, count: 0 }, gemini: { text: null, count: 0 }, deepseek: { text: null, count: 0 } });
+  const stabilityRef = useRef({
+    chatgpt: { text: null, count: 0 },
+    gemini: { text: null, count: 0 },
+    deepseek: { text: null, count: 0 },
+    perplexity: { text: null, count: 0 }
+  });
 
   const currentRoundRef = useRef(0);
   const maxRoundsRef = useRef(2);
@@ -45,10 +51,11 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
   };
 
   const getBaseCounts = async () => {
-    let counts = { chatgpt: 0, gemini: 0, deepseek: 0 };
+    let counts = { chatgpt: 0, gemini: 0, deepseek: 0, perplexity: 0 };
     if (enabledAIs?.chatgpt) counts.chatgpt = (await exec(chatgptRef, chatgptGetCount())) || 0;
     if (enabledAIs?.gemini) counts.gemini = (await exec(geminiRef, geminiGetCount())) || 0;
     if (enabledAIs?.deepseek) counts.deepseek = (await exec(deepseekRef, deepseekGetCount())) || 0;
+    if (enabledAIs?.perplexity) counts.perplexity = (await exec(perplexityRef, perplexityGetCount())) || 0;
     return counts;
   };
 
@@ -86,6 +93,18 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     await exec(deepseekRef, deepseekClickSend());
   };
 
+  const sendToPerplexity = async (message) => {
+    await exec(perplexityRef, perplexityClickInput());
+    await new Promise(r => setTimeout(r, 400));
+    try {
+      await perplexityRef.current.insertText(message);
+    } catch (e) {
+      console.error('insertText failed:', e);
+    }
+    await new Promise(r => setTimeout(r, 600));
+    await exec(perplexityRef, perplexityClickSend());
+  };
+
   const setAiStatus = (ai, s) =>
     setAiStatuses(prev => ({ ...prev, [ai]: s }));
 
@@ -93,16 +112,18 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
   const pollForResponses = useCallback((minCounts, onAllDone) => {
     stabilityRef.current = {
       chatgpt: { text: null, count: 0, minCount: minCounts.chatgpt || 0, done: !enabledAIs?.chatgpt },
-      gemini:  { text: null, count: 0, minCount: minCounts.gemini  || 0, done: !enabledAIs?.gemini },
+      gemini: { text: null, count: 0, minCount: minCounts.gemini || 0, done: !enabledAIs?.gemini },
       deepseek: { text: null, count: 0, minCount: minCounts.deepseek || 0, done: !enabledAIs?.deepseek },
+      perplexity: { text: null, count: 0, minCount: minCounts.perplexity || 0, done: !enabledAIs?.perplexity },
     };
 
     pollerRef.current = setInterval(async () => {
       const st = stabilityRef.current;
-      const pending = { 
-        chatgpt: !st.chatgpt.done, 
+      const pending = {
+        chatgpt: !st.chatgpt.done,
         gemini: !st.gemini.done,
-        deepseek: !st.deepseek.done
+        deepseek: !st.deepseek.done,
+        perplexity: !st.perplexity.done
       };
 
       // Poll ChatGPT
@@ -160,20 +181,44 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
         }
       }
 
+      // Poll Perplexity
+      if (pending.perplexity) {
+        const res = await exec(perplexityRef, perplexityGetResponse(st.perplexity.minCount));
+        if (res?.reason) st.perplexity.reason = res.reason;
+        if (res?.done && res.text) {
+          if (res.text === st.perplexity.text) {
+            st.perplexity.count++;
+          } else {
+            st.perplexity.text = res.text;
+            st.perplexity.count = 1;
+          }
+          if (st.perplexity.count >= STABILITY_CHECKS) {
+            st.perplexity.done = true;
+            setAiStatus('perplexity', 'done');
+          }
+        }
+      }
+
       // All done?
-      if (st.chatgpt.done && st.gemini.done && st.deepseek.done) {
+      if (st.chatgpt.done && st.gemini.done && st.deepseek.done && st.perplexity.done) {
         stopPolling();
-        onAllDone({ chatgpt: st.chatgpt.text, gemini: st.gemini.text, deepseek: st.deepseek.text });
+        onAllDone({
+          chatgpt: st.chatgpt.text,
+          gemini: st.gemini.text,
+          deepseek: st.deepseek.text,
+          perplexity: st.perplexity.text
+        });
       }
     }, POLL_INTERVAL_MS);
-  }, [chatgptRef, geminiRef, deepseekRef, enabledAIs]);
+  }, [chatgptRef, geminiRef, deepseekRef, perplexityRef, enabledAIs]);
 
   const buildCrossPrompt = (target, originalPrompt, prevRound, roundNum) => {
     let others = [];
     if (target !== 'chatgpt' && enabledAIs?.chatgpt && prevRound.chatgpt) others.push(`ChatGPT responded:\n"${prevRound.chatgpt}"`);
     if (target !== 'gemini' && enabledAIs?.gemini && prevRound.gemini) others.push(`Google Gemini responded:\n"${prevRound.gemini}"`);
     if (target !== 'deepseek' && enabledAIs?.deepseek && prevRound.deepseek) others.push(`DeepSeek responded:\n"${prevRound.deepseek}"`);
-    
+    if (target !== 'perplexity' && enabledAIs?.perplexity && prevRound.perplexity) others.push(`Perplexity AI responded:\n"${prevRound.perplexity}"`);
+
     if (roundNum === 0) {
       return `Regarding: "${originalPrompt}"\n\n${others.join('\n\n')}\n\nDo you agree or disagree? Challenge any incorrect points, build on what's right, and give your best answer.`;
     } else {
@@ -194,7 +239,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
 
     // ── Round 0: Send initial prompt to all ──
     setStatus(DEBATE_STATUS.SENDING_INITIAL);
-    setAiStatuses({ chatgpt: 'thinking', gemini: 'thinking', deepseek: 'thinking' });
+    setAiStatuses({
+      chatgpt: 'thinking',
+      gemini: 'thinking',
+      deepseek: 'thinking',
+      perplexity: 'thinking'
+    });
 
     // Capture baseline message count before sending anything
     const baseCounts = await getBaseCounts();
@@ -208,6 +258,9 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     if (delayRef.current > 0) await sleep(delayRef.current * 1000);
     if (enabledAIs?.deepseek) await sendToDeepSeek(prompt);
 
+    if (delayRef.current > 0) await sleep(delayRef.current * 1000);
+    if (enabledAIs?.perplexity) await sendToPerplexity(prompt);
+
     setStatus(DEBATE_STATUS.WAITING_INITIAL);
 
     pollForResponses(baseCounts, async (responses) => {
@@ -216,7 +269,7 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
       currentRoundRef.current = 1;
       await runCrossShareRound(round0, 1, maxRoundsRef.current);
     });
-  }, [status, chatgptRef, geminiRef, pollForResponses]);
+  }, [status, chatgptRef, geminiRef, deepseekRef, perplexityRef, pollForResponses, enabledAIs]);
 
   const runCrossShareRound = async (prevRound, roundNum, maxRounds) => {
     if (roundNum > maxRounds) {
@@ -226,11 +279,17 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     }
 
     setStatus(DEBATE_STATUS.CROSS_SHARING);
-    setAiStatuses({ chatgpt: 'thinking', gemini: 'thinking', deepseek: 'thinking' });
+    setAiStatuses({
+      chatgpt: 'thinking',
+      gemini: 'thinking',
+      deepseek: 'thinking',
+      perplexity: 'thinking'
+    });
 
     const chatgptCrossPrompt = buildCrossPrompt('chatgpt', promptRef.current, prevRound, roundNum - 1);
     const geminiCrossPrompt = buildCrossPrompt('gemini', promptRef.current, prevRound, roundNum - 1);
     const deepseekCrossPrompt = buildCrossPrompt('deepseek', promptRef.current, prevRound, roundNum - 1);
+    const perplexityCrossPrompt = buildCrossPrompt('perplexity', promptRef.current, prevRound, roundNum - 1);
 
     // Capture baseline message count before sending cross prompts
     const baseCounts = await getBaseCounts();
@@ -243,6 +302,9 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
 
     if (delayRef.current > 0) await sleep(delayRef.current * 1000);
     if (enabledAIs?.deepseek) await sendToDeepSeek(deepseekCrossPrompt);
+
+    if (delayRef.current > 0) await sleep(delayRef.current * 1000);
+    if (enabledAIs?.perplexity) await sendToPerplexity(perplexityCrossPrompt);
 
     setStatus(DEBATE_STATUS.WAITING_ROUND);
 
@@ -258,7 +320,7 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     stopPolling();
     setStatus(DEBATE_STATUS.IDLE);
     setRounds([]);
-    setAiStatuses({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle' });
+    setAiStatuses({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle', perplexity: 'idle' });
     setError(null);
   }, []);
 
@@ -280,7 +342,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
       `Be thorough, fair, and conclusive. This is your final word on the matter.`;
 
     setStatus(DEBATE_STATUS.WAITING_ROUND);
-    setAiStatuses({ chatgpt: 'thinking', gemini: 'thinking', deepseek: 'thinking' });
+    setAiStatuses({
+      chatgpt: 'thinking',
+      gemini: 'thinking',
+      deepseek: 'thinking',
+      perplexity: 'thinking'
+    });
 
     // Capture baseline message count before concluding
     const baseCounts = await getBaseCounts();
@@ -294,15 +361,23 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     if (delayRef.current > 0) await sleep(delayRef.current * 1000);
     if (enabledAIs?.deepseek) await sendToDeepSeek(concludePrompt);
 
+    if (delayRef.current > 0) await sleep(delayRef.current * 1000);
+    if (enabledAIs?.perplexity) await sendToPerplexity(concludePrompt);
+
     pollForResponses(baseCounts, async (responses) => {
       setRounds(prev => [
         ...prev,
         { round: 999, label: '🏁 Final Verdict', isFinalVerdict: true, ...responses },
       ]);
       setStatus(DEBATE_STATUS.COMPLETE);
-      setAiStatuses({ chatgpt: 'done', gemini: 'done', deepseek: 'done' });
+      setAiStatuses({
+        chatgpt: 'done',
+        gemini: 'done',
+        deepseek: 'done',
+        perplexity: 'done'
+      });
     });
-  }, [status, chatgptRef, geminiRef, deepseekRef, pollForResponses, enabledAIs]);
+  }, [status, chatgptRef, geminiRef, deepseekRef, perplexityRef, pollForResponses, enabledAIs]);
 
   const isDebating = status !== DEBATE_STATUS.IDLE && status !== DEBATE_STATUS.COMPLETE;
   const progress = rounds.length / ((maxRoundsRef.current || 2) + 1);
@@ -315,10 +390,10 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     let modeRules = '';
     if (settings?.detailMode === 1) {
       modeRules = `• BREVITY IS MANDATORY: Every response must be 3–5 sentences MAX. No long explanations.\n` +
-                  `• Only expand with detail if the user explicitly asks "explain further" or "go deeper".\n`;
+        `• Only expand with detail if the user explicitly asks "explain further" or "go deeper".\n`;
     } else if (settings?.detailMode === -1) {
       modeRules = `• DETAIL IS EXPECTED: Provide long, thorough explanations for your points.\n` +
-                  `• Break down complex ideas and back them up with comprehensive reasoning.\n`;
+        `• Break down complex ideas and back them up with comprehensive reasoning.\n`;
     } else {
       modeRules = `• Respond with a natural, normal length. Let your own judgment decide how much detail is needed.\n`;
     }
@@ -333,7 +408,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
       `This is a structured AI vs AI debate. Be sharp, assertive, and decisive.\n` +
       `Acknowledge these rules briefly and say you are ready. Then WAIT for the first question.`;
 
-    setAiStatuses({ chatgpt: 'thinking', gemini: 'thinking', deepseek: 'thinking' });
+    setAiStatuses({
+      chatgpt: 'thinking',
+      gemini: 'thinking',
+      deepseek: 'thinking',
+      perplexity: 'thinking'
+    });
 
     const delay = settings?.delay || 0;
     if (delay > 0) await sleep(delay * 1000);
@@ -345,9 +425,17 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enable
     if (delay > 0) await sleep(delay * 1000);
     if (enabledAIs?.deepseek) await sendToDeepSeek(prep);
 
+    if (delay > 0) await sleep(delay * 1000);
+    if (enabledAIs?.perplexity) await sendToPerplexity(prep);
+
     // Give them a moment to respond, then flip back to idle
-    setTimeout(() => setAiStatuses({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle' }), 6000);
-  }, [chatgptRef, geminiRef, deepseekRef, enabledAIs]);
+    setTimeout(() => setAiStatuses({
+      chatgpt: 'idle',
+      gemini: 'idle',
+      deepseek: 'idle',
+      perplexity: 'idle'
+    }), 6000);
+  }, [chatgptRef, geminiRef, deepseekRef, perplexityRef, enabledAIs]);
 
   return { status, rounds, aiStatuses, error, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters };
 }

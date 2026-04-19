@@ -8,9 +8,10 @@ import { useDebateOrchestrator, DEBATE_STATUS } from './hooks/useDebateOrchestra
 
 export default function App() {
   const chatgptRef = useRef(null);
-  const geminiRef  = useRef(null);
+  const geminiRef = useRef(null);
   const deepseekRef = useRef(null);
-  
+  const perplexityRef = useRef(null);
+
   const DEFAULT_SETTINGS = {
     rounds: 2,
     delay: 2,
@@ -34,14 +35,15 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', settings.theme || 'dark');
   }, [settings.theme]);
   const [showSettings, setShowSettings] = useState(false);
-  const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true });
+  const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true, perplexity: true });
+  const [activeTab, setActiveTab] = useState('debate'); // 'debate' or 'results'
 
   const toggleAI = (aiKey) => {
     setEnabledAIs(prev => ({ ...prev, [aiKey]: !prev[aiKey] }));
   };
 
   const { status, rounds, aiStatuses, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters } =
-    useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, enabledAIs);
+    useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perplexityRef, enabledAIs);
 
   const handleSend = (prompt) => {
     if (status === DEBATE_STATUS.COMPLETE) reset();
@@ -58,52 +60,88 @@ export default function App() {
         onOpenSettings={() => setShowSettings(true)}
       />
 
+      <div className="tab-navigation">
+        <button
+          className={`tab-button ${activeTab === 'debate' ? 'active' : ''}`}
+          onClick={() => setActiveTab('debate')}
+        >
+          <span className="tab-icon">⚔️</span>
+          Debate View
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'results' ? 'active' : ''}`}
+          onClick={() => setActiveTab('results')}
+        >
+          <span className="tab-icon">🏆</span>
+          Results View
+        </button>
+      </div>
+
       <div className="panels-area">
-        <WebviewPanel
-          ref={chatgptRef}
-          id="chatgpt-webview"
-          name="ChatGPT"
-          icon="🤖"
-          colorClass="chatgpt"
-          url="https://chatgpt.com"
-          partition="persist:chatgpt"
-          aiStatus={aiStatuses.chatgpt}
-          enabled={enabledAIs.chatgpt}
-          onToggle={() => toggleAI('chatgpt')}
-        />
+        {/* Debate View - Always mounted but hidden when not active */}
+        <div className={`debate-view ${activeTab === 'debate' ? 'active' : 'hidden'}`}>
+          <WebviewPanel
+            ref={chatgptRef}
+            id="chatgpt-webview"
+            name="ChatGPT"
+            icon="🤖"
+            colorClass="chatgpt"
+            url="https://chatgpt.com"
+            partition="persist:chatgpt"
+            aiStatus={aiStatuses.chatgpt}
+            enabled={enabledAIs.chatgpt}
+            onToggle={() => toggleAI('chatgpt')}
+          />
 
-        <WebviewPanel
-          ref={geminiRef}
-          id="gemini-webview"
-          name="Google Gemini"
-          icon="✨"
-          colorClass="gemini"
-          url="https://gemini.google.com/app"
-          partition="persist:gemini"
-          aiStatus={aiStatuses.gemini}
-          enabled={enabledAIs.gemini}
-          onToggle={() => toggleAI('gemini')}
-        />
+          <WebviewPanel
+            ref={geminiRef}
+            id="gemini-webview"
+            name="Google Gemini"
+            icon="✨"
+            colorClass="gemini"
+            url="https://gemini.google.com/app"
+            partition="persist:gemini"
+            aiStatus={aiStatuses.gemini}
+            enabled={enabledAIs.gemini}
+            onToggle={() => toggleAI('gemini')}
+          />
 
-        <WebviewPanel
-          ref={deepseekRef}
-          id="deepseek-webview"
-          name="DeepSeek"
-          icon="🐳"
-          colorClass="deepseek"
-          url="https://chat.deepseek.com/"
-          partition="persist:deepseek"
-          aiStatus={aiStatuses.deepseek}
-          enabled={enabledAIs.deepseek}
-          onToggle={() => toggleAI('deepseek')}
-        />
+          <WebviewPanel
+            ref={deepseekRef}
+            id="deepseek-webview"
+            name="DeepSeek"
+            icon="🐳"
+            colorClass="deepseek"
+            url="https://chat.deepseek.com/"
+            partition="persist:deepseek"
+            aiStatus={aiStatuses.deepseek}
+            enabled={enabledAIs.deepseek}
+            onToggle={() => toggleAI('deepseek')}
+          />
 
-        <ConclusionPanel
-          status={status}
-          rounds={rounds}
-          onRequestConclusion={requestConclusion}
-          enabledAIs={enabledAIs}
-        />
+          <WebviewPanel
+            ref={perplexityRef}
+            id="perplexity-webview"
+            name="Perplexity AI"
+            icon="🔍"
+            colorClass="perplexity"
+            url="https://www.perplexity.ai"
+            partition="persist:perplexity"
+            aiStatus={aiStatuses.perplexity}
+            enabled={enabledAIs.perplexity}
+            onToggle={() => toggleAI('perplexity')}
+          />
+        </div>
+
+        {/* Results View - Always mounted but hidden when not active */}
+        <div className={`results-view ${activeTab === 'results' ? 'active' : 'hidden'}`}>
+          <ConclusionPanel
+            status={status}
+            rounds={rounds}
+            onRequestConclusion={requestConclusion}
+            enabledAIs={enabledAIs}
+          />
+        </div>
       </div>
 
       <InputBar

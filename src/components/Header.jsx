@@ -6,12 +6,12 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
   const isComplete = status === DEBATE_STATUS.COMPLETE;
 
   const statusLabel = {
-    [DEBATE_STATUS.IDLE]:            'Ready',
+    [DEBATE_STATUS.IDLE]: 'Ready',
     [DEBATE_STATUS.SENDING_INITIAL]: 'Sending prompt…',
     [DEBATE_STATUS.WAITING_INITIAL]: 'Waiting for initial responses…',
-    [DEBATE_STATUS.CROSS_SHARING]:   'Cross-sharing responses…',
-    [DEBATE_STATUS.WAITING_ROUND]:   `Debating — Round ${rounds.length}…`,
-    [DEBATE_STATUS.COMPLETE]:        '✓ Debate complete',
+    [DEBATE_STATUS.CROSS_SHARING]: 'Cross-sharing responses…',
+    [DEBATE_STATUS.WAITING_ROUND]: `Debating — Round ${rounds.length}…`,
+    [DEBATE_STATUS.COMPLETE]: '✓ Debate complete',
   }[status] || 'Ready';
 
   return (
@@ -47,11 +47,13 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
           <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>
           <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>vs</span>
           <span style={{ color: 'var(--deepseek-color, #4d90fe)' }}>DeepSeek</span>
+          <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>vs</span>
+          <span style={{ color: 'var(--perplexity-color)' }}>Perplexity</span>
         </div>
-        <button 
+        <button
           onClick={onOpenSettings}
           title="Settings"
-          style={{ 
+          style={{
             background: 'none', border: 'none', color: 'var(--text-muted)',
             cursor: 'pointer', fontSize: 18, marginLeft: 8, padding: 4,
             transition: 'color 0.2s', display: 'flex', alignItems: 'center'

@@ -14,18 +14,25 @@ function RoundCard({ round, enabledAIs }) {
           <div className="round-entry-text">{round.chatgpt}</div>
         </div>
       )}
-      {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek) && <div className="glow-divider" />}
+      {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek || enabledAIs?.perplexity) && <div className="glow-divider" />}
       {enabledAIs?.gemini && (
         <div className="round-entry">
           <div className="round-entry-label gemini">✨ Gemini</div>
           <div className="round-entry-text">{round.gemini}</div>
         </div>
       )}
-      {enabledAIs?.gemini && enabledAIs?.deepseek && <div className="glow-divider" />}
+      {enabledAIs?.gemini && (enabledAIs?.deepseek || enabledAIs?.perplexity) && <div className="glow-divider" />}
       {enabledAIs?.deepseek && (
         <div className="round-entry">
           <div className="round-entry-label deepseek" style={{ color: 'var(--deepseek-color)' }}>🐳 DeepSeek</div>
           <div className="round-entry-text">{round.deepseek}</div>
+        </div>
+      )}
+      {enabledAIs?.deepseek && enabledAIs?.perplexity && <div className="glow-divider" />}
+      {enabledAIs?.perplexity && (
+        <div className="round-entry">
+          <div className="round-entry-label perplexity" style={{ color: 'var(--perplexity-color)' }}>🔍 Perplexity</div>
+          <div className="round-entry-text">{round.perplexity}</div>
         </div>
       )}
     </div>
@@ -38,7 +45,8 @@ function VotePanel({ onVote, winner, enabledAIs }) {
     const isGPT = winner === 'chatgpt';
     const isGemini = winner === 'gemini';
     const isDeepSeek = winner === 'deepseek';
-    
+    const isPerplexity = winner === 'perplexity';
+
     let color = 'rgba(74,144,217,0.4)';
     let bg = 'rgba(74,144,217,0.12)';
     let text = 'Google Gemini';
@@ -57,6 +65,12 @@ function VotePanel({ onVote, winner, enabledAIs }) {
       text = 'DeepSeek';
       icon = '🐳';
       varColor = 'var(--deepseek-color)';
+    } else if (isPerplexity) {
+      color = 'rgba(138,43,226,0.4)';
+      bg = 'rgba(138,43,226,0.12)';
+      text = 'Perplexity AI';
+      icon = '🔍';
+      varColor = 'var(--perplexity-color)';
     }
 
     return (
@@ -143,6 +157,23 @@ function VotePanel({ onVote, winner, enabledAIs }) {
             🐳 DeepSeek
           </button>
         )}
+        {enabledAIs?.perplexity && (
+          <button
+            id="vote-perplexity-btn"
+            onClick={() => onVote('perplexity')}
+            style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10,
+              border: '1px solid rgba(138,43,226,0.4)',
+              background: 'rgba(138,43,226,0.1)',
+              color: 'var(--perplexity-color)', cursor: 'pointer',
+              fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(138,43,226,0.22)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(138,43,226,0.1)'}
+          >
+            🔍 Perplexity
+          </button>
+        )}
       </div>
     </div>
   );
@@ -227,7 +258,7 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion, e
             <div className="conclusion-empty-icon">⚔️</div>
             <p className="conclusion-empty-text">
               Type a question below and hit <strong>Send</strong>.<br />
-              ChatGPT, Gemini, and DeepSeek will debate the answer here.
+              ChatGPT, Gemini, DeepSeek, and Perplexity will debate the answer here.
             </p>
           </div>
         )}
@@ -248,10 +279,12 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion, e
           <>
             <div className="debate-vs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '4px' }}>
               {enabledAIs?.chatgpt && <span style={{ color: 'var(--chatgpt-color)' }}>ChatGPT</span>}
-              {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek) && <span>&nbsp;⚔️&nbsp;</span>}
+              {enabledAIs?.chatgpt && (enabledAIs?.gemini || enabledAIs?.deepseek || enabledAIs?.perplexity) && <span>&nbsp;⚔️&nbsp;</span>}
               {enabledAIs?.gemini && <span style={{ color: 'var(--gemini-color)' }}>Gemini</span>}
-              {enabledAIs?.gemini && enabledAIs?.deepseek && <span>&nbsp;⚔️&nbsp;</span>}
+              {enabledAIs?.gemini && (enabledAIs?.deepseek || enabledAIs?.perplexity) && <span>&nbsp;⚔️&nbsp;</span>}
               {enabledAIs?.deepseek && <span style={{ color: 'var(--deepseek-color)' }}>DeepSeek</span>}
+              {enabledAIs?.deepseek && enabledAIs?.perplexity && <span>&nbsp;⚔️&nbsp;</span>}
+              {enabledAIs?.perplexity && <span style={{ color: 'var(--perplexity-color)' }}>Perplexity</span>}
               <span style={{ color: 'var(--text-muted)', fontSize: 10, marginLeft: 4 }}>— click a round to expand</span>
             </div>
 
