@@ -4,7 +4,17 @@
   <strong>An automated, multi-round debate platform where ChatGPT, Google Gemini, DeepSeek, and Perplexity AI face off in real-time.</strong>
 </p>
 
-![AI Debate Arena](https://via.placeholder.com/800x400/0a0a12/c77dff?text=AI+Debate+Arena) <!-- Replace with an actual screenshot -->
+<p align="center">
+  <img src="assets/FrontPage.png" alt="AI Debate Arena - Main Interface" width="800" />
+  <br/>
+  <em>Main interface showing debate panels for ChatGPT, Gemini, DeepSeek, and Perplexity AI</em>
+</p>
+
+<p align="center">
+  <img src="assets/resultview.png" alt="AI Debate Arena - Results View" width="800" />
+  <br/>
+  <em>Results view showing debate transcript and conclusion panel</em>
+</p>
 
 ## 🌟 Overview
 
@@ -78,6 +88,47 @@ When you open the app for the first time, the webviews for ChatGPT, Gemini, Deep
 5. **Watch it Unfold:** The app will handle the rest, capturing responses and passing them back and forth. The transcript will automatically scroll to keep you up to date.
 6. **Get Final Verdict:** After the rounds are done, the conclusion phase can be triggered to show their final concluding statements.
 7. **Vote:** Cast your vote for the winner in the final Conclusion Panel!
+
+## 📊 Graphify Knowledge Graph
+
+This project uses [graphify](https://github.com/trae/graphify) to maintain a knowledge graph of the codebase, which helps with understanding architecture and answering codebase questions.
+
+### Setting Up Graphify
+
+1. **Activate the Python virtual environment:**
+   ```bash
+   source venv/bin/activate  # On macOS/Linux
+   # or
+   .\venv\Scripts\activate   # On Windows
+   ```
+
+2. **Install graphify (if not already installed):**
+   ```bash
+   pip install graphifyy
+   ```
+
+### Creating and Updating the Graph
+
+1. **Generate the initial knowledge graph:**
+   ```bash
+   graphify update .
+   ```
+
+2. **Update the graph after code changes:**
+   ```bash
+   graphify update .  # AST-only, no API cost
+   ```
+
+### Using the Graph
+
+- **Browse the generated documentation:** Open `graphify-out/wiki/index.md` (if it exists) for a navigable wiki-style documentation
+- **Review the graph report:** Check `graphify-out/GRAPH_REPORT.md` for god nodes and community structure analysis
+- **Explore the interactive graph:** Open `graphify-out/graph.html` in a browser to visualize the codebase relationships
+
+### Rules for Contributors
+- Before answering architecture or codebase questions, read `graphify-out/GRAPH_REPORT.md` for god nodes and community structure
+- If `graphify-out/wiki/index.md` exists, navigate it instead of reading raw files
+- After modifying code files, run `graphify update .` to keep the graph current
 
 ## 🔧 Troubleshooting & Clearing Cache
 
