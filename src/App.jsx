@@ -18,7 +18,7 @@ export default function App() {
   });
   const [showSettings, setShowSettings] = useState(false);
 
-  const { status, rounds, aiStatuses, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters, debugInfo } =
+  const { status, rounds, aiStatuses, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters } =
     useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef);
 
   const handleSend = (prompt) => {
@@ -34,7 +34,6 @@ export default function App() {
         maxRounds={settings.rounds}
         progress={progress}
         onOpenSettings={() => setShowSettings(true)}
-        debugInfo={debugInfo}
       />
 
       <div className="panels-area">

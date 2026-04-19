@@ -20,7 +20,6 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef) {
   const [rounds, setRounds] = useState([]);
   const [aiStatuses, setAiStatuses] = useState({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle' });
   const [error, setError] = useState(null);
-  const [debugInfo, setDebugInfo] = useState(null);
 
   const pollerRef = useRef(null);
   const stabilityRef = useRef({ chatgpt: { text: null, count: 0 }, gemini: { text: null, count: 0 }, deepseek: { text: null, count: 0 } });
@@ -162,21 +161,8 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef) {
 
       // All done?
       if (st.chatgpt.done && st.gemini.done && st.deepseek.done) {
-        setDebugInfo({
-          chatgpt: `min:${st.chatgpt.minCount} done:${st.chatgpt.done} stab:${st.chatgpt.count} len:${st.chatgpt.text?.length || 0}`,
-          gemini: `min:${st.gemini.minCount} done:${st.gemini.done} stab:${st.gemini.count} len:${st.gemini.text?.length || 0}`,
-          deepseek: `min:${st.deepseek.minCount} done:${st.deepseek.done} stab:${st.deepseek.count} len:${st.deepseek.text?.length || 0}`,
-          active: false
-        });
         stopPolling();
         onAllDone({ chatgpt: st.chatgpt.text, gemini: st.gemini.text, deepseek: st.deepseek.text });
-      } else {
-        setDebugInfo({
-          chatgpt: `min:${st.chatgpt.minCount} done:${st.chatgpt.done} stab:${st.chatgpt.count} len:${st.chatgpt.text?.length || 0} why:${st.chatgpt.reason || '?'}`,
-          gemini: `min:${st.gemini.minCount} done:${st.gemini.done} stab:${st.gemini.count} len:${st.gemini.text?.length || 0} why:${st.gemini.reason || '?'}`,
-          deepseek: `min:${st.deepseek.minCount} done:${st.deepseek.done} stab:${st.deepseek.count} len:${st.deepseek.text?.length || 0} why:${st.deepseek.reason || '?'}`,
-          active: true
-        });
       }
     }, POLL_INTERVAL_MS);
   }, [chatgptRef, geminiRef, deepseekRef]);
@@ -362,5 +348,5 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef) {
     setTimeout(() => setAiStatuses({ chatgpt: 'idle', gemini: 'idle', deepseek: 'idle' }), 6000);
   }, [chatgptRef, geminiRef, deepseekRef]);
 
-  return { status, rounds, aiStatuses, error, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters, debugInfo };
+  return { status, rounds, aiStatuses, error, isDebating, progress, startDebate, reset, requestConclusion, prepareDebaters };
 }

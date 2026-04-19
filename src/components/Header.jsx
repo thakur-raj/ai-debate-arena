@@ -1,7 +1,7 @@
 import React from 'react';
 import { DEBATE_STATUS } from '../hooks/useDebateOrchestrator';
 
-export default function Header({ status, rounds, maxRounds, progress, onOpenSettings, debugInfo }) {
+export default function Header({ status, rounds, maxRounds, progress, onOpenSettings }) {
   const isDebating = status !== DEBATE_STATUS.IDLE && status !== DEBATE_STATUS.COMPLETE;
   const isComplete = status === DEBATE_STATUS.COMPLETE;
 
@@ -34,18 +34,6 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
       </div>
 
       <div className="header-right">
-        {debugInfo && (
-          <div style={{ fontSize: '9px', color: '#ff6b6b', fontFamily: 'monospace', textAlign: 'right', marginRight: '10px', display: 'flex', flexDirection: 'column', gap: '1px', maxWidth: '260px' }}>
-            <span style={{ fontWeight: 'bold', color: debugInfo.active ? '#ff9900' : '#44ff44' }}>
-              {debugInfo.active ? '⏳ POLLING' : '✅ DONE'}
-            </span>
-            <span style={{ color: '#aaa' }}>GPT: {debugInfo.chatgpt}</span>
-            <span style={{ color: '#aaa' }}>Gem: {debugInfo.gemini}</span>
-            <span style={{ color: debugInfo.active && debugInfo.deepseek?.includes('why:') ? '#ff6b6b' : '#aaa' }}>
-              DSK: {debugInfo.deepseek || 'waiting...'}
-            </span>
-          </div>
-        )}
         {isDebating && (
           <div style={{ width: 120 }}>
             <div className="debate-progress">

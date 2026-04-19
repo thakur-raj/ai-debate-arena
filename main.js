@@ -52,7 +52,6 @@ function createWindow() {
     ? `http://localhost:${port}`
     : `file://${path.join(__dirname, 'dist/index.html')}`;
 
-  console.log(`[main] isDev=${isDev}, loading: ${url}`);
   win.loadURL(url).catch(err => console.error('[main] loadURL failed:', err));
 
   if (isDev) {
