@@ -134,4 +134,21 @@ describe('useDebateOrchestrator Hook', () => {
     expect(result.current.status).toBe(DEBATE_STATUS.IDLE);
     expect(chatgptRef.current.executeJavaScript).not.toHaveBeenCalled();
   });
+
+  test('sendToGemini uses insertText and focus scripts', async () => {
+    vi.useRealTimers();
+    const geminiRef = createMockRef();
+    const { result } = renderHook(() => 
+      useDebateOrchestrator(createMockRef(), geminiRef, createMockRef(), { chatgpt: false, gemini: true, deepseek: false })
+    );
+
+    // Await the promise within act
+    await act(async () => {
+      await result.current.startDebate('Test Gemini', { rounds: 0, delay: 0 });
+    });
+
+    // It should have called focus and insertText
+    expect(geminiRef.current.executeJavaScript).toHaveBeenCalled();
+    expect(geminiRef.current.insertText).toHaveBeenCalledWith('Test Gemini');
+  });
 });
