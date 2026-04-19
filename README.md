@@ -1,18 +1,18 @@
 # ⚔️ AI Debate Arena
 
 <p align="center">
-  <strong>An automated, multi-round debate platform where ChatGPT, Google Gemini, and DeepSeek face off in real-time.</strong>
+  <strong>An automated, multi-round debate platform where ChatGPT, Google Gemini, DeepSeek, and Perplexity AI face off in real-time.</strong>
 </p>
 
 ![AI Debate Arena](https://via.placeholder.com/800x400/0a0a12/c77dff?text=AI+Debate+Arena) <!-- Replace with an actual screenshot -->
 
 ## 🌟 Overview
 
-**AI Debate Arena** is an Electron-based application that embeds ChatGPT, Google Gemini, and DeepSeek into isolated webviews and orchestrates an automated three-way debate between them. You simply provide a topic or question, select the number of rounds, configure your debate settings, and the application acts as the moderator—feeding each AI's response to the others as counter-arguments.
+**AI Debate Arena** is an Electron-based application that embeds ChatGPT, Google Gemini, DeepSeek, and Perplexity AI into isolated webviews and orchestrates automated multi-AI debates. You simply provide a topic or question, select the number of rounds, configure your debate settings, and the application acts as the moderator—feeding each AI's response to the others as counter-arguments.
 
 ## ✨ Key Features
 
-- **🤖 vs ✨ vs 🐳 Three-Way Multi-Round Debates:** Configure up to 10 rounds of back-and-forth debate between three of the most powerful LLMs in the world.
+- **🤖 Multi-AI Debate Platform:** Configure debates between ChatGPT, Google Gemini, DeepSeek, and Perplexity AI with up to 10 rounds of back-and-forth discussion.
 - **🔄 Automated Cross-Sharing:** The application's orchestrator automatically extracts arguments from one AI and feeds them as counter-prompts to the others without manual intervention.
 - **🥊 Prepare Debaters Mode:** Prime all AIs for a concise, punchy debate mode before starting, ensuring high-quality, brief arguments tailored to the debate setting.
 - **⚙️ Advanced Configuration:** 
@@ -28,10 +28,10 @@
 - **Frontend Framework:** [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Styling:** Vanilla CSS with a custom Glassmorphism design system and modern UI tokens.
 - **Orchestration Logic:** A robust custom React hook (`useDebateOrchestrator`) manages the complex state machine of the debate (priming, rounds, waiting for responses, concluding).
-- **DOM Injection:** Custom JavaScript injectors (`chatgptInjector.js`, `geminiInjector.js`, `deepseekInjector.js`) are safely executed within the webviews to read AI responses and simulate user input.
+- **DOM Injection:** Custom JavaScript injectors (`chatgptInjector.js`, `geminiInjector.js`, `deepseekInjector.js`, `perplexityInjector.js`) are safely executed within the webviews to read AI responses and simulate user input.
 
 ### Core Architecture Components
-- **`useDebateOrchestrator.js`**: The brains of the operation. Manages the debate state machine, orchestrates the turns, and handles the handoff between the three models.
+- **`useDebateOrchestrator.js`**: The brains of the operation. Manages the debate state machine, orchestrates the turns, and handles the handoff between the AI models.
 - **`WebviewPanel.jsx`**: A reusable component that safely wraps Electron's `<webview>` tags, handling events like `dom-ready` and IPC messages to eliminate rendering errors.
 - **`ConclusionPanel.jsx`**: The final phase UI where users can review the summarized arguments and cast their vote for the winner.
 - **`SettingsModal.jsx`**: A comprehensive configuration system allowing users to fine-tune the orchestrator's timing and behavior.
@@ -41,7 +41,7 @@
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v16 or higher recommended)
-- Standard accounts for ChatGPT, Google Gemini, and DeepSeek (you will need to log into them inside the app).
+- Standard accounts for ChatGPT, Google Gemini, DeepSeek, and/or Perplexity AI (you will need to log into them inside the app).
 
 ### Installation
 
@@ -62,11 +62,12 @@
    ```
 
 ### First Run & Login
-When you open the app for the first time, the webviews for ChatGPT, Gemini, and DeepSeek will prompt you to log in. 
+When you open the app for the first time, the webviews for ChatGPT, Gemini, DeepSeek, and Perplexity AI will prompt you to log in.
 1. Log into ChatGPT on its respective panel.
 2. Log into Google Gemini on its respective panel.
 3. Log into DeepSeek on its respective panel.
-4. Once logged in, your sessions are saved automatically across restarts!
+4. Log into Perplexity AI on its respective panel (if using).
+5. Once logged in, your sessions are saved automatically across restarts!
 
 ## 💡 How to Use
 
@@ -103,7 +104,7 @@ npm run dev
 
 Contributions, issues, and feature requests are welcome! 
 
-**Important note for contributors:** Since this project relies on DOM selectors (`document.querySelector`) to interact with external platforms, it *will* break if ChatGPT, Gemini, or DeepSeek update their UI. PRs to update broken selectors in `src/utils/*Injector.js` files are highly appreciated and are the most common maintenance tasks for this project.
+**Important note for contributors:** Since this project relies on DOM selectors (`document.querySelector`) to interact with external platforms, it *will* break if ChatGPT, Gemini, DeepSeek, or Perplexity AI update their UI. PRs to update broken selectors in `src/utils/*Injector.js` files are highly appreciated and are the most common maintenance tasks for this project.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -111,17 +112,62 @@ Contributions, issues, and feature requests are welcome!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## ⚠️ Disclaimer & Terms of Use
+## ⚠️ Legal & Safety Disclaimer
 
-**This is an independent, open-source educational project.** 
+**CRITICAL WARNING: This software may violate Terms of Service of AI platforms and could result in account termination.**
 
-- **No Affiliation:** This project is not affiliated with, endorsed by, or sponsored by OpenAI, Google, or DeepSeek. 
-- **Trademarks:** "ChatGPT", "Google Gemini", and "DeepSeek" are trademarks of their respective owners.
-- **Terms of Service:** This application automates web browser interactions (DOM scraping and UI automation). Using this software may violate the Terms of Service of OpenAI, Google, or DeepSeek. By using or modifying this codebase, you assume all risks associated with your accounts, including but not limited to account suspension, banning, or rate-limiting.
-- **Liability:** The author(s) of this project assume **zero liability** for any damages, account bans, or legal repercussions resulting from the use of this software. The code is provided strictly for educational purposes to demonstrate Electron webview capabilities and React state machines.
+### 🚨 Important Legal Notice
 
-## 📝 License
+This is an independent, open-source educational project designed for research and learning purposes only.
 
-This project is distributed under the **MIT License**. You are free to use, modify, and distribute this software, subject to the conditions of the license. 
+#### No Affiliation or Endorsement
+- This project is **NOT** affiliated with, endorsed by, or sponsored by:
+  - **OpenAI** (ChatGPT)
+  - **Google** (Gemini)
+  - **DeepSeek AI**
+  - **Perplexity AI**
+- All trademarks, service marks, and logos are property of their respective owners.
 
-See the [`LICENSE`](LICENSE) file for more information.
+#### Terms of Service Violations
+This application uses **DOM scraping and browser automation** to interact with AI platforms, which may explicitly violate their Terms of Service:
+
+| Platform | Potential ToS Violations |
+|----------|--------------------------|
+| **ChatGPT (OpenAI)** | Automated access, scraping, bypassing rate limits |
+| **Google Gemini** | Unauthorized automation, circumventing access controls |
+| **DeepSeek** | Automated interactions without API consent |
+| **Perplexity AI** | Unauthorized data extraction, automated queries |
+
+**By using this software, you acknowledge that:**
+1. You are solely responsible for reading and complying with each platform's Terms of Service
+2. Your accounts may be suspended, terminated, or permanently banned
+3. You may lose access to paid services or credits
+4. Legal action could be taken against you by platform providers
+
+#### Liability Disclaimer
+The authors and contributors of this project assume **ABSOLUTELY NO LIABILITY** for:
+- Account suspensions, bans, or terminations
+- Loss of data, credits, or paid subscriptions
+- Legal consequences or lawsuits
+- Any damages resulting from use of this software
+
+This software is provided **"AS IS"** for educational purposes only to demonstrate:
+- Electron webview capabilities
+- React state machine patterns
+- Browser automation techniques
+
+### 🔒 Responsible Usage Guidelines
+
+If you choose to use this software despite the risks:
+
+1. **Use separate/test accounts** - Never use your primary or paid accounts
+2. **Limit usage frequency** - Avoid aggressive automation that triggers detection
+3. **Monitor account status** - Regularly check for warnings or restrictions
+4. **Respect rate limits** - Add significant delays between requests
+5. **Stay informed** - Keep up with platform ToS changes
+
+### 📝 License
+
+This project is distributed under the **MIT License** with additional third-party service disclaimers. You are free to use, modify, and distribute this software, subject to the conditions of the license and the additional warnings in the [`LICENSE`](LICENSE) file.
+
+**See the full license with AI service disclaimers in the [`LICENSE`](LICENSE) file.**

@@ -19,3 +19,35 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+================================================================================
+THIRD-PARTY AI SERVICES DISCLAIMER
+================================================================================
+
+This software interacts with third-party AI services including but not limited to:
+- OpenAI ChatGPT (https://chat.openai.com)
+- Google Gemini (https://gemini.google.com)
+- DeepSeek (https://chat.deepseek.com)
+- Perplexity AI (https://www.perplexity.ai)
+
+These services are owned and operated by their respective companies. This software
+is not affiliated with, endorsed by, or sponsored by any of these companies.
+
+USE OF THIS SOFTWARE MAY VIOLATE THE TERMS OF SERVICE OF THIRD-PARTY AI SERVICES.
+By using this software, you acknowledge and agree that:
+
+1. You are solely responsible for complying with the Terms of Service of each
+   AI service you access through this software.
+2. The authors of this software assume no liability for any consequences
+   resulting from your use of this software, including but not limited to:
+   - Account suspension, termination, or banning by AI service providers
+   - Legal action taken by AI service providers
+   - Loss of data or access to services
+3. This software is provided for educational and research purposes only.
+4. You must have legitimate access to each AI service through proper
+   authentication methods (e.g., valid user accounts).
+5. The software authors make no representations about the legality of using
+   this software in your jurisdiction or under the terms of any AI service.
+
+Use of trademarks "ChatGPT", "Gemini", "DeepSeek", "Perplexity" and related
+logos is for descriptive purposes only and does not imply endorsement.
