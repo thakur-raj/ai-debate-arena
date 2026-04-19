@@ -41,3 +41,41 @@ build/
 
 # Testing
 coverage/
+
+# Graphify knowledge graph (generated)
+graphify-out/
+
+# Python virtual environment
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.pytest_cache/
+.coverage
+.coverage.*
+.hypothesis/
+.python-version
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
