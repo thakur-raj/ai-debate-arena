@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
+export default function SettingsModal({ isOpen, onClose, settings, onSave }) {
+  const [localSettings, setLocalSettings] = useState(settings);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalSettings(settings);
+    }
+  }, [isOpen, settings]);
+
   if (!isOpen) return null;
 
   const handleChange = (key, value) => {
-    onSettingsChange({ ...settings, [key]: value });
+    setLocalSettings(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleSave = () => {
+    onSave(localSettings);
   };
 
   return (
@@ -43,7 +55,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
             <input
               type="number"
               min={1} max={10}
-              value={settings.rounds}
+              value={localSettings.rounds}
               onChange={e => handleChange('rounds', Math.max(1, Math.min(10, parseInt(e.target.value) || 1)))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
@@ -61,7 +73,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
             <input
               type="number"
               min={0} max={15} step={0.5}
-              value={settings.delay}
+              value={localSettings.delay}
               onChange={e => handleChange('delay', Math.max(0, Math.min(15, parseFloat(e.target.value) || 0)))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
@@ -80,7 +92,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
               Response Detail (Debater Prep)
             </label>
             <select
-              value={settings.detailMode}
+              value={localSettings.detailMode}
               onChange={e => handleChange('detailMode', parseInt(e.target.value))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
@@ -99,12 +111,37 @@ export default function SettingsModal({ isOpen, onClose, settings, onSettingsCha
           </div>
         </div>
 
-        <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <label style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 600 }}>
+            Theme
+          </label>
+          <select
+            value={localSettings.theme || 'dark'}
+            onChange={e => handleChange('theme', e.target.value)}
+            style={{
+              width: '100%', padding: '10px 12px', borderRadius: 8,
+              border: '1px solid var(--border)', background: 'var(--bg-surface)',
+              color: 'var(--text-primary)', fontSize: 14, outline: 'none',
+              appearance: 'none'
+            }}
+          >
+            <option value="dark">Dark Theme</option>
+            <option value="light">Light Theme</option>
+          </select>
+        </div>
+
+        <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
           <button onClick={onClose} style={{
+            padding: '8px 20px', borderRadius: 8, background: 'transparent',
+            color: 'var(--text-primary)', border: '1px solid var(--border)', cursor: 'pointer', fontWeight: 600
+          }}>
+            Cancel
+          </button>
+          <button onClick={handleSave} style={{
             padding: '8px 24px', borderRadius: 8, background: 'var(--border-glow)',
             color: 'white', border: 'none', cursor: 'pointer', fontWeight: 600
           }}>
-            Done
+            Save Settings
           </button>
         </div>
       </div>

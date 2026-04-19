@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
 import WebviewPanel from './components/WebviewPanel.jsx';
 import ConclusionPanel from './components/ConclusionPanel.jsx';
@@ -11,11 +11,28 @@ export default function App() {
   const geminiRef  = useRef(null);
   const deepseekRef = useRef(null);
   
-  const [settings, setSettings] = useState({
+  const DEFAULT_SETTINGS = {
     rounds: 2,
-    delay: 2, // seconds
-    detailMode: 1 // 1: short, 0: normal, -1: long
+    delay: 2,
+    detailMode: 1,
+    theme: 'dark'
+  };
+
+  const [settings, setSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ai_debate_settings');
+      if (saved) {
+        return { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
+      }
+    } catch (e) {
+      console.error("Failed to load settings", e);
+    }
+    return DEFAULT_SETTINGS;
   });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', settings.theme || 'dark');
+  }, [settings.theme]);
   const [showSettings, setShowSettings] = useState(false);
   const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true });
 
@@ -104,7 +121,11 @@ export default function App() {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
         settings={settings}
-        onSettingsChange={setSettings}
+        onSave={(newSettings) => {
+          setSettings(newSettings);
+          localStorage.setItem('ai_debate_settings', JSON.stringify(newSettings));
+          setShowSettings(false);
+        }}
       />
     </div>
   );
