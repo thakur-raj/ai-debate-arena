@@ -12,13 +12,31 @@
     "url": "git+https://github.com/thakur-raj/ai-debate-arena.git"
   },
   "license": "MIT",
+  "keywords": [
+    "ai",
+    "debate",
+    "chatgpt",
+    "gemini",
+    "deepseek",
+    "perplexity",
+    "electron",
+    "react",
+    "llm"
+  ],
   "scripts": {
     "dev": "concurrently -k \"vite --port 5173\" \"wait-on http://localhost:5173 && cross-env VITE_PORT=5173 electron .\"",
     "build": "vite build",
     "start": "electron .",
+    "preview": "vite preview",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint 'src/**/*.{js,jsx}' 'main.js' 'preload.js'",
-    "build:electron": "npm run build && electron-builder"
+    "lint:fix": "eslint 'src/**/*.{js,jsx}' 'main.js' 'preload.js' --fix",
+    "build:electron": "npm run build && electron-builder",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "publish": "npm run build && electron-builder --publish always"
   },
   "build": {
     "appId": "com.thakur-raj.ai-debate-arena",
@@ -33,7 +51,8 @@
       "dist/**/*",
       "main.js",
       "preload.js",
-      "assets/**/*"
+      "assets/**/*",
+      "package.json"
     ],
     "win": {
       "target": [
@@ -41,16 +60,22 @@
       ],
       "icon": "assets/icon.ico"
     },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
     "mac": {
       "target": [
-        "dmg"
+        "dmg",
+        "zip"
       ],
       "icon": "assets/icon.icns",
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "notarize": false
     },
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "zip"
       ],
       "icon": "assets/icon.ico",
       "category": "Utility"
