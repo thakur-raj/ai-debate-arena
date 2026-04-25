@@ -59,9 +59,9 @@ describe('InputBar Component', () => {
     render(<InputBar isDebating={false} isComplete={false} />);
     const prepareBtn = screen.getByText('🥊 Prepare Debaters');
     fireEvent.mouseEnter(prepareBtn);
-    expect(prepareBtn.style.background).toBe('rgba(74, 144, 217, 0.25)');
+    expect(prepareBtn.style.background).toBe('var(--accent-soft)');
     fireEvent.mouseLeave(prepareBtn);
-    expect(prepareBtn.style.background).toBe('rgba(74, 144, 217, 0.12)');
+    expect(prepareBtn.style.background).toBe('var(--accent-soft)');
   });
 
   test('handles hover on stop button', () => {
@@ -77,9 +77,9 @@ describe('InputBar Component', () => {
     render(<InputBar isDebating={false} isComplete={true} hasVerdict={false} />);
     const verdictBtn = screen.getByText('🏁 Get Final Verdict');
     fireEvent.mouseEnter(verdictBtn);
-    expect(verdictBtn.style.background).toBe('rgba(199, 125, 255, 0.3)');
+    expect(verdictBtn.style.background).toBe('var(--conclusion-glow)');
     fireEvent.mouseLeave(verdictBtn);
-    expect(verdictBtn.style.background).toBe('rgba(199, 125, 255, 0.15)');
+    expect(verdictBtn.style.background).toBe('var(--conclusion-soft)');
   });
 
   test('handles enter key to send', () => {
