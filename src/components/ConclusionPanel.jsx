@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { memo, useState } from 'react';
 import { DEBATE_STATUS } from '../hooks/useDebateOrchestrator';
 
-function RoundCard({ round, enabledAIs }) {
+const RoundCard = memo(function RoundCard({ round, enabledAIs }) {
   return (
     <div className="round-card">
       <div className="round-card-header">
@@ -37,10 +38,9 @@ function RoundCard({ round, enabledAIs }) {
       )}
     </div>
   );
-}
+});
 
-
-function VotePanel({ onVote, winner, enabledAIs }) {
+const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
   if (winner) {
     const isGPT = winner === 'chatgpt';
     const isGemini = winner === 'gemini';
@@ -75,11 +75,8 @@ function VotePanel({ onVote, winner, enabledAIs }) {
 
     return (
       <div style={{
-        padding: '12px 14px',
-        borderRadius: 10,
-        background: bg,
-        border: `1px solid ${color}`,
-        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '12px 14px', borderRadius: 10, background: bg,
+        border: `1px solid ${color}`, display: 'flex', alignItems: 'center', gap: 10,
       }}>
         <span style={{ fontSize: 22 }}>{icon}</span>
         <div>
@@ -177,9 +174,9 @@ function VotePanel({ onVote, winner, enabledAIs }) {
       </div>
     </div>
   );
-}
+});
 
-function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasVerdict, enabledAIs }) {
+const FinalConclusionCard = memo(function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasVerdict, enabledAIs }) {
   return (
     <div className="conclusion-final-card" style={{ flexShrink: 0 }}>
       <div className="conclusion-final-title">🏆 Debate Complete — {rounds.length} Round{rounds.length !== 1 ? 's' : ''}</div>
@@ -187,10 +184,9 @@ function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasV
         The AIs have exchanged their arguments. Scroll down to read the full transcript.
       </div>
 
-      {/* Get Final Verdict button */}
       {!hasVerdict && (
         <button
-          id="get-final-verdict-btn"
+          id="get-final-verdict-conclusion-btn"
           onClick={onRequestConclusion}
           style={{
             width: '100%', padding: '10px 16px', borderRadius: 10,
@@ -217,9 +213,9 @@ function FinalConclusionCard({ rounds, onVote, winner, onRequestConclusion, hasV
       </div>
     </div>
   );
-}
+});
 
-export default function ConclusionPanel({ status, rounds, onRequestConclusion, enabledAIs }) {
+const ConclusionPanel = memo(function ConclusionPanel({ status, rounds, onRequestConclusion, enabledAIs }) {
   const [winner, setWinner] = useState(null);
 
   const isDebating = status !== DEBATE_STATUS.IDLE && status !== DEBATE_STATUS.COMPLETE;
@@ -274,7 +270,6 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion, e
           />
         )}
 
-
         {rounds.length > 0 && (
           <>
             <div className="debate-vs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '4px' }}>
@@ -311,4 +306,6 @@ export default function ConclusionPanel({ status, rounds, onRequestConclusion, e
       </div>
     </div>
   );
-}
+});
+
+export default ConclusionPanel;

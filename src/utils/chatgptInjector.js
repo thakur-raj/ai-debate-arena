@@ -32,14 +32,20 @@ export const chatgptSend = (message) => `
   } else {
     // For contenteditable (ProseMirror / Lexical)
     input.innerHTML = '';
-    // Use execCommand for broad compatibility
-    const success = document.execCommand('insertText', false, ${JSON.stringify(message)});
-    if (!success) {
-      // Fallback: set innerText and fire events
-      input.innerText = ${JSON.stringify(message)};
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.dispatchEvent(new InputEvent('input', { bubbles: true, data: ${JSON.stringify(message)} }));
-    }
+    // Use modern InputEvent for broad compatibility
+    input.dispatchEvent(new InputEvent('beforeinput', {
+      inputType: 'insertText',
+      data: ${JSON.stringify(message)},
+      bubbles: true,
+      cancelable: true
+    }));
+    input.innerText = ${JSON.stringify(message)};
+    input.dispatchEvent(new InputEvent('input', {
+      inputType: 'insertText',
+      data: ${JSON.stringify(message)},
+      bubbles: true
+    }));
+    input.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
   await new Promise(r => setTimeout(r, 800));

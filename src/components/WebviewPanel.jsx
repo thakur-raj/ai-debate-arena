@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState, useCallback, forwardRef } from 'react';
+import React, { memo, useRef, useEffect, useState, useCallback, forwardRef } from 'react';
 
-const WebviewPanel = forwardRef(function WebviewPanel(
+const WebviewPanel = memo(forwardRef(function WebviewPanel(
   { id, name, icon, colorClass, url, partition, aiStatus, enabled = true, onToggle },
   forwardedRef
 ) {
@@ -94,7 +94,7 @@ const WebviewPanel = forwardRef(function WebviewPanel(
       </div>
     </div>
   );
-});
+}));
 
 export default WebviewPanel;
 

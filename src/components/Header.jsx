@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { DEBATE_STATUS } from '../hooks/useDebateOrchestrator';
 
-export default function Header({ status, rounds, maxRounds, progress, onOpenSettings }) {
+const Header = memo(function Header({ status, rounds, progress, onOpenSettings }) {
   const isDebating = status !== DEBATE_STATUS.IDLE && status !== DEBATE_STATUS.COMPLETE;
   const isComplete = status === DEBATE_STATUS.COMPLETE;
 
@@ -66,4 +66,6 @@ export default function Header({ status, rounds, maxRounds, progress, onOpenSett
       </div>
     </header>
   );
-}
+});
+
+export default Header;

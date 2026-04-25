@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect } from 'react';
 
-export default function InputBar({ onSend, disabled, onReset, isDebating, isComplete, onRequestConclusion, onPrepareDebaters, hasVerdict }) {
+const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating, isComplete, onRequestConclusion, onPrepareDebaters, hasVerdict }) {
   const [value, setValue] = useState('');
   const textareaRef = useRef(null);
 
@@ -72,7 +72,7 @@ export default function InputBar({ onSend, disabled, onReset, isDebating, isComp
             Debate complete — want each AI to give a final conclusion?
           </span>
           <button
-            id="get-final-verdict-btn"
+            id="get-final-verdict-input-btn"
             onClick={onRequestConclusion}
             style={{
               padding: '7px 18px', borderRadius: 8,
@@ -164,4 +164,6 @@ export default function InputBar({ onSend, disabled, onReset, isDebating, isComp
       </div>
     </div>
   );
-}
+});
+
+export default InputBar;

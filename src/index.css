@@ -143,6 +143,11 @@ body,
   z-index: 100;
 }
 
+.platform-win .header,
+.platform-linux .header {
+  padding: 0 16px 0 100px; /* space for window controls on the left */
+}
+
 .header-left {
   display: flex;
   align-items: center;

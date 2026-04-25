@@ -12,6 +12,9 @@ export default function App() {
   const deepseekRef = useRef(null);
   const perplexityRef = useRef(null);
 
+  const platform = window.electronAPI?.platform || 'darwin';
+  const platformClass = platform === 'win32' ? 'platform-win' : platform === 'linux' ? 'platform-linux' : '';
+
   const DEFAULT_SETTINGS = {
     rounds: 2,
     delay: 2,
@@ -51,7 +54,7 @@ export default function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${platformClass}`}>
       <Header
         status={status}
         rounds={rounds}

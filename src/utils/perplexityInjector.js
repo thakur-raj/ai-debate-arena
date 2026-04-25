@@ -40,7 +40,11 @@ export const perplexityClickInput = () => `
       sel.addRange(range);
     }
   } catch (_) {
-    document.execCommand('selectAll', false, null);
+    input.dispatchEvent(new InputEvent('beforeinput', {
+      inputType: 'selectAll',
+      bubbles: true,
+      cancelable: true
+    }));
   }
 
   return { found: true };

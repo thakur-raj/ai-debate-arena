@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 
-export default function SettingsModal({ isOpen, onClose, settings, onSave }) {
+const SettingsModal = memo(function SettingsModal({ isOpen, onClose, settings, onSave }) {
   const [localSettings, setLocalSettings] = useState(settings);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSave }) {
               <option value={-1}>Detailed (Long, explained answers)</option>
             </select>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
-              This dictates how the AIs are primed when you click "Prepare Debaters".
+               This dictates how the AIs are primed when you click &ldquo;Prepare Debaters&rdquo;.
             </div>
           </div>
         </div>
@@ -147,4 +147,6 @@ export default function SettingsModal({ isOpen, onClose, settings, onSave }) {
       </div>
     </div>
   );
-}
+});
+
+export default SettingsModal;

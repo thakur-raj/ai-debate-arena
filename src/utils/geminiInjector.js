@@ -34,7 +34,12 @@ export const geminiClickInput = () => `
     sel.removeAllRanges();
     sel.addRange(range);
   } catch (_) {
-    document.execCommand('selectAll', false, null);
+    // Modern select-all for contenteditable: dispatch beforeinput event
+    input.dispatchEvent(new InputEvent('beforeinput', {
+      inputType: 'selectAll',
+      bubbles: true,
+      cancelable: true
+    }));
   }
 
   return { found: true };

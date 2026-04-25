@@ -5,20 +5,20 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yourusername/ai-debate-arena/blob/main/LICENSE">
+  <a href="https://github.com/thakur-raj/ai-debate-arena/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
   </a>
-  <a href="https://github.com/yourusername/ai-debate-arena/stargazers">
-    <img src="https://img.shields.io/github/stars/yourusername/ai-debate-arena?style=social" alt="GitHub Stars">
+  <a href="https://github.com/thakur-raj/ai-debate-arena/stargazers">
+    <img src="https://img.shields.io/github/stars/thakur-raj/ai-debate-arena?style=social" alt="GitHub Stars">
   </a>
-  <a href="https://github.com/yourusername/ai-debate-arena/forks">
-    <img src="https://img.shields.io/github/forks/yourusername/ai-debate-arena?style=social" alt="GitHub Forks">
+  <a href="https://github.com/thakur-raj/ai-debate-arena/forks">
+    <img src="https://img.shields.io/github/forks/thakur-raj/ai-debate-arena?style=social" alt="GitHub Forks">
   </a>
-  <a href="https://github.com/yourusername/ai-debate-arena/issues">
-    <img src="https://img.shields.io/github/issues/yourusername/ai-debate-arena" alt="GitHub Issues">
+  <a href="https://github.com/thakur-raj/ai-debate-arena/issues">
+    <img src="https://img.shields.io/github/issues/thakur-raj/ai-debate-arena" alt="GitHub Issues">
   </a>
-  <a href="https://github.com/yourusername/ai-debate-arena/pulls">
-    <img src="https://img.shields.io/github/issues-pr/yourusername/ai-debate-arena" alt="GitHub Pull Requests">
+  <a href="https://github.com/thakur-raj/ai-debate-arena/pulls">
+    <img src="https://img.shields.io/github/issues-pr/thakur-raj/ai-debate-arena" alt="GitHub Pull Requests">
   </a>
 </p>
 
@@ -75,7 +75,7 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/ai-debate-arena.git
+   git clone https://github.com/thakur-raj/ai-debate-arena.git
    cd ai-debate-arena
    ```
 

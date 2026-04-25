@@ -33,10 +33,12 @@ export const deepseekClickInput = () => `
     sel.removeAllRanges();
     sel.addRange(range);
   } catch (_) {
-    try {
-      input.setSelectionRange(0, input.value.length);
-    } catch (e) {
-      document.execCommand('selectAll', false, null);
+    if (input.tagName === 'TEXTAREA' || input.tagName === 'INPUT') {
+      try {
+        input.setSelectionRange(0, input.value.length);
+      } catch (e) {
+        // fall through to selectAll
+      }
     }
   }
 
