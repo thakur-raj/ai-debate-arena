@@ -47,40 +47,24 @@ const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
     const isDeepSeek = winner === 'deepseek';
     const isPerplexity = winner === 'perplexity';
 
-    let color = 'rgba(74,144,217,0.4)';
-    let bg = 'rgba(74,144,217,0.12)';
+    let colorVar = '--gemini-color';
     let text = 'Google Gemini';
     let icon = '✨';
-    let varColor = 'var(--gemini-color)';
 
-    if (isGPT) {
-      color = 'rgba(16,163,127,0.4)';
-      bg = 'rgba(16,163,127,0.12)';
-      text = 'ChatGPT';
-      icon = '🤖';
-      varColor = 'var(--chatgpt-color)';
-    } else if (isDeepSeek) {
-      color = 'rgba(77,107,254,0.4)';
-      bg = 'rgba(77,107,254,0.12)';
-      text = 'DeepSeek';
-      icon = '🐳';
-      varColor = 'var(--deepseek-color)';
-    } else if (isPerplexity) {
-      color = 'rgba(138,43,226,0.4)';
-      bg = 'rgba(138,43,226,0.12)';
-      text = 'Perplexity AI';
-      icon = '🔍';
-      varColor = 'var(--perplexity-color)';
-    }
+    if (isGPT) { colorVar = '--chatgpt-color'; text = 'ChatGPT'; icon = '🤖'; }
+    else if (isDeepSeek) { colorVar = '--deepseek-color'; text = 'DeepSeek'; icon = '🐳'; }
+    else if (isPerplexity) { colorVar = '--perplexity-color'; text = 'Perplexity AI'; icon = '🔍'; }
 
     return (
       <div style={{
-        padding: '12px 14px', borderRadius: 10, background: bg,
-        border: `1px solid ${color}`, display: 'flex', alignItems: 'center', gap: 10,
+        padding: '12px 14px', borderRadius: 10,
+        background: `var(--${colorVar.replace('--', '').replace('-color', '-soft')})`,
+        border: `1px solid var(--${colorVar.replace('--', '').replace('-color', '-glow')})`,
+        display: 'flex', alignItems: 'center', gap: 10,
       }}>
         <span style={{ fontSize: 22 }}>{icon}</span>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: varColor }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: `var(${colorVar})` }}>
             🏆 {text} wins!
           </div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
@@ -109,13 +93,13 @@ const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
             onClick={() => onVote('chatgpt')}
             style={{
               flex: 1, padding: '10px 6px', borderRadius: 10,
-              border: '1px solid rgba(16,163,127,0.4)',
-              background: 'rgba(16,163,127,0.1)',
+              border: '1px solid var(--chatgpt-glow)',
+              background: 'var(--chatgpt-soft)',
               color: 'var(--chatgpt-color)', cursor: 'pointer',
               fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,163,127,0.22)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,163,127,0.1)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--chatgpt-glow)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--chatgpt-soft)'}
           >
             🤖 GPT
           </button>
@@ -126,13 +110,13 @@ const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
             onClick={() => onVote('gemini')}
             style={{
               flex: 1, padding: '10px 6px', borderRadius: 10,
-              border: '1px solid rgba(74,144,217,0.4)',
-              background: 'rgba(74,144,217,0.1)',
+              border: '1px solid var(--gemini-glow)',
+              background: 'var(--gemini-soft)',
               color: 'var(--gemini-color)', cursor: 'pointer',
               fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,144,217,0.22)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,144,217,0.1)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--gemini-glow)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--gemini-soft)'}
           >
             ✨ Gemini
           </button>
@@ -143,13 +127,13 @@ const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
             onClick={() => onVote('deepseek')}
             style={{
               flex: 1, padding: '10px 6px', borderRadius: 10,
-              border: '1px solid rgba(77,107,254,0.4)',
-              background: 'rgba(77,107,254,0.1)',
+              border: '1px solid var(--deepseek-glow)',
+              background: 'var(--deepseek-soft)',
               color: 'var(--deepseek-color)', cursor: 'pointer',
               fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(77,107,254,0.22)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(77,107,254,0.1)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--deepseek-glow)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--deepseek-soft)'}
           >
             🐳 DeepSeek
           </button>
@@ -160,13 +144,13 @@ const VotePanel = memo(function VotePanel({ onVote, winner, enabledAIs }) {
             onClick={() => onVote('perplexity')}
             style={{
               flex: 1, padding: '10px 6px', borderRadius: 10,
-              border: '1px solid rgba(138,43,226,0.4)',
-              background: 'rgba(138,43,226,0.1)',
+              border: '1px solid var(--perplexity-glow)',
+              background: 'var(--perplexity-soft)',
               color: 'var(--perplexity-color)', cursor: 'pointer',
               fontSize: 12, fontWeight: 600, transition: 'all 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(138,43,226,0.22)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(138,43,226,0.1)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--perplexity-glow)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--perplexity-soft)'}
           >
             🔍 Perplexity
           </button>
@@ -190,14 +174,14 @@ const FinalConclusionCard = memo(function FinalConclusionCard({ rounds, onVote, 
           onClick={onRequestConclusion}
           style={{
             width: '100%', padding: '10px 16px', borderRadius: 10,
-            border: '1px solid rgba(199,125,255,0.5)',
-            background: 'rgba(199,125,255,0.12)',
+            border: '1px solid var(--conclusion-glow)',
+            background: 'var(--conclusion-soft)',
             color: 'var(--conclusion-color)',
             cursor: 'pointer', fontSize: 13, fontWeight: 600,
             transition: 'all 0.2s', letterSpacing: '0.2px',
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(199,125,255,0.25)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(199,125,255,0.12)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--conclusion-glow)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--conclusion-soft)'}
         >
           🏁 Request Final Verdict from Participants
         </button>
@@ -208,7 +192,7 @@ const FinalConclusionCard = memo(function FinalConclusionCard({ rounds, onVote, 
         </div>
       )}
 
-      <div style={{ borderTop: '1px solid rgba(199,125,255,0.2)', paddingTop: 12, marginTop: 4 }}>
+      <div style={{ borderTop: '1px solid var(--conclusion-glow)', paddingTop: 12, marginTop: 4 }}>
         <VotePanel onVote={onVote} winner={winner} enabledAIs={enabledAIs} />
       </div>
     </div>
@@ -290,8 +274,8 @@ const ConclusionPanel = memo(function ConclusionPanel({ status, rounds, onReques
         )}
 
         {isDebating && (
-          <div className="round-card" style={{ borderColor: 'rgba(255,193,7,0.2)' }}>
-            <div className="round-card-header" style={{ color: '#ffc107' }}>
+          <div className="round-card" style={{ borderColor: 'rgba(250,204,21,0.2)' }}>
+            <div className="round-card-header" style={{ color: '#eab308' }}>
               <span>⏳</span> Debating…
             </div>
             <div className="round-entry">

@@ -35,8 +35,8 @@ const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating,
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '7px 16px', gap: 12,
-          background: 'rgba(74,144,217,0.06)',
-          borderTop: '1px solid rgba(74,144,217,0.18)',
+          background: 'var(--accent-soft)',
+          borderTop: '1px solid var(--accent-glow)',
         }}>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             First time? Prime both AIs for debate mode before asking your question.
@@ -46,14 +46,14 @@ const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating,
             onClick={onPrepareDebaters}
             style={{
               padding: '7px 18px', borderRadius: 8,
-              border: '1px solid rgba(74,144,217,0.5)',
-              background: 'rgba(74,144,217,0.12)',
-              color: 'var(--gemini-color)',
+              border: '1px solid var(--accent-glow)',
+              background: 'var(--accent-soft)',
+              color: 'var(--accent)',
               cursor: 'pointer', fontSize: 13, fontWeight: 700,
               whiteSpace: 'nowrap', transition: 'all 0.2s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,144,217,0.25)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,144,217,0.12)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-soft)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--accent-soft)'}
           >
             🥊 Prepare Debaters
           </button>
@@ -65,8 +65,8 @@ const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating,
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '8px 16px', gap: 12,
-          background: 'rgba(199,125,255,0.08)',
-          borderTop: '1px solid rgba(199,125,255,0.25)',
+          background: 'var(--conclusion-soft)',
+          borderTop: '1px solid var(--conclusion-glow)',
         }}>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             Debate complete — want each AI to give a final conclusion?
@@ -76,14 +76,14 @@ const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating,
             onClick={onRequestConclusion}
             style={{
               padding: '7px 18px', borderRadius: 8,
-              border: '1px solid rgba(199,125,255,0.5)',
-              background: 'rgba(199,125,255,0.15)',
+              border: '1px solid var(--conclusion-glow)',
+              background: 'var(--conclusion-soft)',
               color: 'var(--conclusion-color)',
               cursor: 'pointer', fontSize: 13, fontWeight: 700,
               whiteSpace: 'nowrap', transition: 'all 0.2s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(199,125,255,0.3)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(199,125,255,0.15)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--conclusion-soft)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--conclusion-soft)'}
           >
             🏁 Get Final Verdict
           </button>
@@ -94,8 +94,8 @@ const InputBar = memo(function InputBar({ onSend, disabled, onReset, isDebating,
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '6px 16px',
-          background: 'rgba(199,125,255,0.05)',
-          borderTop: '1px solid rgba(199,125,255,0.15)',
+          background: 'var(--conclusion-soft)',
+          borderTop: '1px solid var(--conclusion-glow)',
           fontSize: 11, color: 'var(--text-muted)',
         }}>
           ✓ Final verdict requested — scroll the right panel to see conclusions

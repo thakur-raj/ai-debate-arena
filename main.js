@@ -37,10 +37,10 @@ function createWindow() {
 
   const isMac = process.platform === 'darwin';
   const win = new BrowserWindow({
-    width: 1600,
-    height: 950,
-    minWidth: 1200,
-    minHeight: 700,
+    width: 1280,
+    height: 800,
+    minWidth: 900,
+    minHeight: 600,
     icon: path.join(__dirname, 'assets/icon.ico'),
     autoHideMenuBar: true,
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
@@ -53,6 +53,8 @@ function createWindow() {
       webSecurity: false,
     },
   });
+
+  win.webContents.setZoomFactor(1);
 
   // Also configure the main session (no CSP override — keep app security)
   configureSession(win.webContents.session, false);

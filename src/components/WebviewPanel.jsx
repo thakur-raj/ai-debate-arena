@@ -68,7 +68,7 @@ const WebviewPanel = memo(forwardRef(function WebviewPanel(
 
       <div className="webview-wrap">
         {!enabled && (
-          <div className="webview-overlay" style={{ background: 'rgba(10,10,18,0.6)', backdropFilter: 'blur(4px)', pointerEvents: 'all' }}>
+          <div className="webview-overlay" style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(4px)', pointerEvents: 'all' }}>
             <p className="overlay-text" style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)' }}>
               {name} is disabled
             </p>
