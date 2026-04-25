@@ -2,7 +2,7 @@
   "name": "ai-debate-arena",
   "version": "1.0.0",
   "description": "AI models debate each other to find the best answer — an Electron + React app where ChatGPT, Gemini, DeepSeek, and Perplexity battle it out",
-  "main": "./main.js",
+  "main": "main.js",
   "author": {
     "name": "Raj Thakur",
     "url": "https://github.com/thakur-raj"
@@ -68,7 +68,7 @@
         "dmg",
         "zip"
       ],
-      "icon": "assets/icon.icns",
+      "icon": "assets/icon.png",
       "category": "public.app-category.productivity",
       "notarize": false
     },
