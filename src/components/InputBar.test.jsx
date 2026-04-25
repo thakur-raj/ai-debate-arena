@@ -77,7 +77,7 @@ describe('InputBar Component', () => {
     render(<InputBar isDebating={false} isComplete={true} hasVerdict={false} />);
     const verdictBtn = screen.getByText('🏁 Get Final Verdict');
     fireEvent.mouseEnter(verdictBtn);
-    expect(verdictBtn.style.background).toBe('var(--conclusion-glow)');
+    expect(verdictBtn.style.background).toBe('var(--conclusion-soft)');
     fireEvent.mouseLeave(verdictBtn);
     expect(verdictBtn.style.background).toBe('var(--conclusion-soft)');
   });
