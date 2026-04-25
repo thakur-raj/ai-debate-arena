@@ -198,6 +198,7 @@ body,
   align-items: center;
   gap: 10px;
   -webkit-app-region: no-drag;
+  margin-left: auto;
 }
 
 .round-badge {

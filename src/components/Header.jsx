@@ -55,7 +55,7 @@ const Header = memo(function Header({ status, rounds, progress, onOpenSettings }
           title="Settings"
           style={{
             background: 'none', border: 'none', color: 'var(--text-muted)',
-            cursor: 'pointer', fontSize: 18, marginLeft: 8, padding: 4,
+            cursor: 'pointer', fontSize: 18, padding: 4,
             transition: 'color 0.2s', display: 'flex', alignItems: 'center'
           }}
           onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}

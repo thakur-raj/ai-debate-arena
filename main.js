@@ -41,7 +41,7 @@ function createWindow() {
     height: 950,
     minWidth: 1200,
     minHeight: 700,
-    icon: path.join(__dirname, 'assets/icon.png'),
+    icon: path.join(__dirname, 'assets/icon.ico'),
     autoHideMenuBar: true,
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     backgroundColor: '#f5f5f5',
@@ -73,6 +73,7 @@ function createWindow() {
   });
 }
 
+app.setAppUserModelId('Ai Debate Arena');
 app.whenReady().then(() => {
   createWindow();
   app.on('activate', () => {
