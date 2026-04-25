@@ -66,12 +66,24 @@
 
 ## 🚀 Getting Started
 
+### Download Prebuilt Installer (Windows/macOS/Linux)
+
+Download the latest installer from the [Releases page](https://github.com/thakur-raj/ai-debate-arena/releases):
+
+| Platform | File |
+|---|---|
+| Windows | `AI Debate Arena Setup 1.0.0.exe` |
+| macOS | `AI Debate Arena-1.0.0.dmg` |
+| Linux | `AI Debate Arena-1.0.0.AppImage` |
+
+**Note:** Windows may show a SmartScreen warning because the installer is not code-signed (costs $99+/year). Click **"More info" → "Run anyway"** to proceed. The app is safe and open-source.
+
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or higher recommended)
+- [Node.js](https://nodejs.org/) (v16 or higher recommended) — only needed if running from source
 - Standard accounts for ChatGPT, Google Gemini, DeepSeek, and/or Perplexity AI (you will need to log into them inside the app).
 
-### Installation
+### Installation (from source)
 
 1. **Clone the repository:**
    ```bash

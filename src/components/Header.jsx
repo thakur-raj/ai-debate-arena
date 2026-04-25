@@ -17,7 +17,7 @@ const Header = memo(function Header({ status, rounds, progress, onOpenSettings }
   return (
     <header className="header">
       <div className="header-left">
-        <div className="header-logo"><img src="/icon.png" alt="" style={{ width: 24, height: 24 }} /></div>
+        <div className="header-logo">⚔️</div>
         <span className="header-title">AI Debate Arena</span>
         {isDebating && (
           <span className="round-badge">

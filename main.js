@@ -42,8 +42,9 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 700,
     icon: path.join(__dirname, 'assets/icon.png'),
+    autoHideMenuBar: true,
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
-    backgroundColor: '#0a0a12',
+    backgroundColor: '#f5f5f5',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,

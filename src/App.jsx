@@ -19,7 +19,7 @@ export default function App() {
     rounds: 2,
     delay: 2,
     detailMode: 1,
-    theme: 'dark'
+    theme: 'light'
   };
 
   const [settings, setSettings] = useState(() => {
@@ -35,7 +35,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', settings.theme || 'dark');
+    document.documentElement.setAttribute('data-theme', settings.theme || 'light');
   }, [settings.theme]);
   const [showSettings, setShowSettings] = useState(false);
   const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true, perplexity: true });

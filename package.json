@@ -51,28 +51,24 @@
     ],
     "win": {
       "target": [
-        "nsis"
+        "portable"
       ],
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.ico",
+      "artifactName": "AI-Debate-Arena-${version}-${arch}.${ext}"
     },
     "mac": {
       "target": [
         "dmg"
       ],
-      "icon": "assets/icon.png",
+      "icon": "assets/icon.icns",
       "category": "public.app-category.productivity"
     },
     "linux": {
       "target": [
         "AppImage"
       ],
-      "icon": "assets/icon.png",
+      "icon": "assets/icon.ico",
       "category": "Utility"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
     }
   },
   "devDependencies": {
@@ -89,6 +85,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "jsdom": "^29.0.2",
+    "png2icons": "^2.0.1",
     "vite": "^5.1.0",
     "vitest": "^4.1.4",
     "wait-on": "^7.2.0"
