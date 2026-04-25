@@ -3,8 +3,7 @@ name: Build & Release
 on:
   push:
     branches: [main]
-    tags:
-      - 'v*'
+    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -39,7 +38,10 @@ jobs:
 
       - run: npm ci
 
-      - name: Build (${{ matrix.os }})
+      - name: Build Web Assets
+        run: npm run build
+
+      - name: Build Electron (${{ matrix.os }})
         run: npx electron-builder --publish=never
         env:
           CSC_LINK: ''
@@ -56,13 +58,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - uses: actions/download-artifact@v4
         with:
           pattern: release-*
           merge-multiple: true
-
       - uses: softprops/action-gh-release@v2
         with:
           files: |

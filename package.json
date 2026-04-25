@@ -2,7 +2,7 @@
   "name": "ai-debate-arena",
   "version": "1.0.0",
   "description": "AI models debate each other to find the best answer — an Electron + React app where ChatGPT, Gemini, DeepSeek, and Perplexity battle it out",
-  "main": "main.js",
+  "main": "./main.js",
   "author": {
     "name": "Raj Thakur",
     "url": "https://github.com/thakur-raj"
@@ -12,35 +12,20 @@
     "url": "git+https://github.com/thakur-raj/ai-debate-arena.git"
   },
   "license": "MIT",
-  "keywords": [
-    "ai",
-    "debate",
-    "chatgpt",
-    "gemini",
-    "deepseek",
-    "perplexity",
-    "electron",
-    "react",
-    "llm"
-  ],
   "scripts": {
     "dev": "concurrently -k \"vite --port 5173\" \"wait-on http://localhost:5173 && cross-env VITE_PORT=5173 electron .\"",
     "build": "vite build",
     "start": "electron .",
-    "preview": "vite preview",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
     "lint": "eslint 'src/**/*.{js,jsx}' 'main.js' 'preload.js'",
-    "lint:fix": "eslint 'src/**/*.{js,jsx}' 'main.js' 'preload.js' --fix",
-    "build:electron": "vite build && electron-builder",
-    "build:win": "vite build && electron-builder --win",
-    "build:mac": "vite build && electron-builder --mac",
-    "build:linux": "vite build && electron-builder --linux",
-    "publish": "vite build && electron-builder --publish always"
+    "build:electron": "npm run build && electron-builder"
   },
   "build": {
     "appId": "com.thakur-raj.ai-debate-arena",
     "productName": "AI Debate Arena",
+    "extraMetadata": {
+      "main": "main.js"
+    },
     "directories": {
       "output": "release"
     },
@@ -54,14 +39,7 @@
       "target": [
         "portable"
       ],
-      "icon": "assets/icon.ico",
-      "signDlls": false,
-      "signAndEditExecutable": false,
-      "certificateFile": "",
-      "certificatePassword": ""
-    },
-    "portable": {
-      "artifactName": "${productName}-${version}-portable.${ext}"
+      "icon": "assets/icon.ico"
     },
     "mac": {
       "target": [
@@ -88,12 +66,10 @@
     "cross-env": "^7.0.3",
     "electron": "^29.0.0",
     "electron-builder": "^24.13.3",
-    "electron-packager": "^17.1.2",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "jsdom": "^29.0.2",
-    "png2icons": "^2.0.1",
     "vite": "^5.1.0",
     "vitest": "^4.1.4",
     "wait-on": "^7.2.0"
