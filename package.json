@@ -56,7 +56,9 @@
       ],
       "icon": "assets/icon.ico",
       "signDlls": false,
-      "signAndEditExecutable": false
+      "signAndEditExecutable": false,
+      "certificateFile": "",
+      "certificatePassword": ""
     },
     "portable": {
       "artifactName": "${productName}-${version}-portable.${ext}"
