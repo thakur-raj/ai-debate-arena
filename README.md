@@ -50,30 +50,17 @@
 - **🏆 Judge the Winner:** Review the beautifully formatted debate transcript with stabilized scrolling, and cast your vote for the AI that made the most compelling case in the interactive Conclusion Panel.
 - **🔒 Secure & Persistent Sessions:** Uses robust session management with isolated Electron webview partitions (`persist:chatgpt`, `persist:gemini`, `persist:deepseek`) to safely persist your login sessions without interfering with your main browser. 
 
-## 🛠️ Tech Stack & Architecture
-
-- **Desktop Framework:** [Electron](https://www.electronjs.org/) (Handles webview isolation and cross-origin orchestration)
-- **Frontend Framework:** [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Styling:** Vanilla CSS with a custom Glassmorphism design system and modern UI tokens.
-- **Orchestration Logic:** A robust custom React hook (`useDebateOrchestrator`) manages the complex state machine of the debate (priming, rounds, waiting for responses, concluding).
-- **DOM Injection:** Custom JavaScript injectors (`chatgptInjector.js`, `geminiInjector.js`, `deepseekInjector.js`, `perplexityInjector.js`) are safely executed within the webviews to read AI responses and simulate user input.
-
-### Core Architecture Components
-- **`useDebateOrchestrator.js`**: The brains of the operation. Manages the debate state machine, orchestrates the turns, and handles the handoff between the AI models.
-- **`WebviewPanel.jsx`**: A reusable component that safely wraps Electron's `<webview>` tags, handling events like `dom-ready` and IPC messages to eliminate rendering errors.
-- **`ConclusionPanel.jsx`**: The final phase UI where users can review the summarized arguments and cast their vote for the winner.
-- **`SettingsModal.jsx`**: A comprehensive configuration system allowing users to fine-tune the orchestrator's timing and behavior.
-
 ## 🚀 Getting Started
 
-### Download Prebuilt Installer (Windows/macOS/Linux)
+### Download Prebuilt Binaries (Windows/macOS/Linux)
 
-Download the latest installer from the [Releases page](https://github.com/thakur-raj/ai-debate-arena/releases):
+Grab the latest release from the [Releases page](https://github.com/thakur-raj/ai-debate-arena/releases) — no Node.js or source build needed.
 
 | Platform | File |
 |---|---|
-| Windows | `AI Debate Arena Setup 1.0.0.exe` |
-| macOS | `AI Debate Arena-1.0.0.dmg` |
+| Windows | `AI Debate Arena Setup 1.0.0.exe` (installer) or `AI Debate Arena-1.0.0-win32-x64.zip` (portable) |
+| macOS (Intel) | `AI Debate Arena-1.0.0-x64.dmg` |
+| macOS (Apple Silicon) | `AI Debate Arena-1.0.0-arm64.dmg` |
 | Linux | `AI Debate Arena-1.0.0.AppImage` |
 
 **macOS:** After downloading, open the `.dmg` and drag the app to Applications. Then run this in Terminal:
@@ -116,6 +103,20 @@ When you open the app for the first time, the webviews for ChatGPT, Gemini, Deep
 3. Log into DeepSeek on its respective panel.
 4. Log into Perplexity AI on its respective panel (if using).
 5. Once logged in, your sessions are saved automatically across restarts!
+
+## 🛠️ Tech Stack & Architecture
+
+- **Desktop Framework:** [Electron](https://www.electronjs.org/) (Handles webview isolation and cross-origin orchestration)
+- **Frontend Framework:** [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Styling:** Vanilla CSS with a custom Glassmorphism design system and modern UI tokens.
+- **Orchestration Logic:** A robust custom React hook (`useDebateOrchestrator`) manages the complex state machine of the debate (priming, rounds, waiting for responses, concluding).
+- **DOM Injection:** Custom JavaScript injectors (`chatgptInjector.js`, `geminiInjector.js`, `deepseekInjector.js`, `perplexityInjector.js`) are safely executed within the webviews to read AI responses and simulate user input.
+
+### Core Architecture Components
+- **`useDebateOrchestrator.js`**: The brains of the operation. Manages the debate state machine, orchestrates the turns, and handles the handoff between the AI models.
+- **`WebviewPanel.jsx`**: A reusable component that safely wraps Electron's `<webview>` tags, handling events like `dom-ready` and IPC messages to eliminate rendering errors.
+- **`ConclusionPanel.jsx`**: The final phase UI where users can review the summarized arguments and cast their vote for the winner.
+- **`SettingsModal.jsx`**: A comprehensive configuration system allowing users to fine-tune the orchestrator's timing and behavior.
 
 ## 💡 How to Use
 
