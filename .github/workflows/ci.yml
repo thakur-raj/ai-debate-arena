@@ -37,6 +37,8 @@ jobs:
           cache: npm
 
       - run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
 
       - name: Build Web Assets
         run: npm run build
