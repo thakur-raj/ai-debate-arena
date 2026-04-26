@@ -76,7 +76,15 @@ Download the latest installer from the [Releases page](https://github.com/thakur
 | macOS | `AI Debate Arena-1.0.0.dmg` |
 | Linux | `AI Debate Arena-1.0.0.AppImage` |
 
-**Note:** Windows may show a SmartScreen warning because the installer is not code-signed (costs $99+/year). Click **"More info" → "Run anyway"** to proceed. The app is safe and open-source.
+**macOS:** After downloading, open the `.dmg` and drag the app to Applications. Then run this in Terminal:
+
+```bash
+xattr -cr /Applications/AI\ Debate\ Arena.app
+```
+
+Now launch from Launchpad or Spotlight. This is needed because the app isn't signed with an Apple Developer account ($99/year). The app is safe and open-source.
+
+**Windows:** May show a SmartScreen warning because the installer is not code-signed ($99+/year). Click **"More info" → "Run anyway"** to proceed. The app is safe and open-source.
 
 ### Prerequisites
 
