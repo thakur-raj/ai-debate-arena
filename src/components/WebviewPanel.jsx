@@ -5,6 +5,7 @@ const WebviewPanel = memo(forwardRef(function WebviewPanel(
   forwardedRef
 ) {
   const [loading, setLoading] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const internalRef = useRef(null);
 
   // Combine internal ref (for effects) with forwarded ref (for parent's executeJavaScript)
@@ -42,7 +43,7 @@ const WebviewPanel = memo(forwardRef(function WebviewPanel(
   }[aiStatus] || 'Ready';
 
   return (
-    <div className="panel" style={{ opacity: enabled ? 1 : 0.6, transition: 'opacity 0.2s' }}>
+    <div className={`panel ${collapsed ? 'collapsed' : ''}`} style={{ opacity: enabled ? 1 : 0.6, transition: 'opacity 0.2s' }}>
       <div className={`panel-header ${colorClass}`}>
         <div className="panel-title-row">
           <div className={`ai-icon ${colorClass}`}>{icon}</div>
@@ -55,6 +56,13 @@ const WebviewPanel = memo(forwardRef(function WebviewPanel(
               style={{ accentColor: `var(--${colorClass}-color)`, cursor: 'pointer', margin: 0 }}
             />
           </label>
+          <button
+            className="panel-collapse-btn"
+            onClick={() => setCollapsed(c => !c)}
+            title={collapsed ? 'Expand' : 'Collapse'}
+          >
+            {collapsed ? '▶' : '▼'}
+          </button>
         </div>
         <div className={`status-pill ${aiStatus}`}>
           <span className="status-dot" />

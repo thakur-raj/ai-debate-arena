@@ -42,6 +42,11 @@
   --radius-lg: 20px;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-size-base: 14px;
+  --font-size-sm: 12px;
+  --font-size-xs: 10px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
 
   --scrollbar-thumb: rgba(255, 255, 255, 0.08);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.16);
@@ -160,7 +165,7 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: calc(var(--font-size-base) + 2px);
   animation: logoPulse 3s ease-in-out infinite;
 }
 
@@ -170,7 +175,7 @@ html, body, #root {
 }
 
 .header-title {
-  font-size: 15px;
+  font-size: calc(var(--font-size-base) + 1px);
   font-weight: 700;
   background: linear-gradient(90deg, var(--accent), var(--conclusion-color));
   -webkit-background-clip: text;
@@ -195,7 +200,7 @@ html, body, #root {
   border-radius: 20px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -237,7 +242,7 @@ html, body, #root {
   border-bottom: 2px solid transparent;
   color: var(--text-secondary);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -254,7 +259,7 @@ html, body, #root {
   border-bottom-color: var(--accent);
 }
 
-.tab-icon { font-size: 16px; }
+.tab-icon { font-size: calc(var(--font-size-base) + 2px); }
 
 /* ─── Panels Area ────────────────────────────────────────── */
 .panels-area {
@@ -341,18 +346,16 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--font-size-base);
   flex-shrink: 0;
 }
-
-.ai-icon.chatgpt { background: var(--chatgpt-soft); border: 1px solid var(--chatgpt-glow); }
 .ai-icon.gemini { background: var(--gemini-soft); border: 1px solid var(--gemini-glow); }
 .ai-icon.deepseek { background: var(--deepseek-soft); border: 1px solid var(--deepseek-glow); }
 .ai-icon.perplexity { background: var(--perplexity-soft); border: 1px solid var(--perplexity-glow); }
 .ai-icon.conclusion { background: var(--conclusion-soft); border: 1px solid var(--conclusion-glow); }
 
 .panel-name {
-  font-size: 13px;
+  font-size: calc(var(--font-size-base) - 1px);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -363,15 +366,10 @@ html, body, #root {
   gap: 5px;
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 500;
   transition: all 0.3s ease;
 }
-
-.status-pill.idle { background: var(--status-idle-bg); color: var(--text-muted); }
-.status-pill.thinking { background: rgba(250, 204, 21, 0.1); color: #eab308; }
-.status-pill.done { background: rgba(74, 222, 128, 0.1); color: #4ade80; }
-.status-pill.error { background: rgba(248, 113, 113, 0.1); color: #f87171; }
 
 .status-dot {
   width: 5px;
@@ -422,24 +420,10 @@ webview { width: 100%; height: 100%; display: flex; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .overlay-text {
-  font-size: 13px;
+  font-size: calc(var(--font-size-base) - 1px);
   color: var(--text-secondary);
   text-align: center;
   line-height: 1.5;
-}
-
-/* ─── Conclusion Panel ───────────────────────────────────── */
-.conclusion-panel {
-  position: absolute;
-  top: 49px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .conclusion-empty {
@@ -463,7 +447,7 @@ webview { width: 100%; height: 100%; display: flex; }
 }
 
 .conclusion-empty-text {
-  font-size: 13px;
+  font-size: calc(var(--font-size-base) - 1px);
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -488,7 +472,7 @@ webview { width: 100%; height: 100%; display: flex; }
   padding: 8px 12px;
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -506,7 +490,7 @@ webview { width: 100%; height: 100%; display: flex; }
 .round-entry:last-child { border-bottom: none; }
 
 .round-entry-label {
-  font-size: 10px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -518,7 +502,7 @@ webview { width: 100%; height: 100%; display: flex; }
 .round-entry-label.perplexity { color: var(--perplexity-color); }
 
 .round-entry-text {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   line-height: 1.5;
   font-family: var(--font-body);
@@ -544,13 +528,13 @@ webview { width: 100%; height: 100%; display: flex; }
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: calc(var(--font-size-base) - 1px);
   font-weight: 700;
   color: var(--conclusion-color);
 }
 
 .conclusion-final-text {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -564,7 +548,7 @@ webview { width: 100%; height: 100%; display: flex; }
   border-radius: var(--radius-sm);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   justify-content: center;
   color: var(--text-muted);
   font-weight: 600;
@@ -593,7 +577,7 @@ webview { width: 100%; height: 100%; display: flex; }
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: var(--font-size-base);
   padding: 11px 16px;
   resize: none;
   outline: none;
@@ -619,7 +603,7 @@ webview { width: 100%; height: 100%; display: flex; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: calc(var(--font-size-base) + 4px);
   transition: all 0.2s;
   flex-shrink: 0;
   background: var(--accent);
@@ -642,7 +626,7 @@ webview { width: 100%; height: 100%; display: flex; }
 .send-btn.loading svg { animation: spin 0.8s linear infinite; }
 
 .input-hint {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--text-muted);
   margin-top: 6px;
   padding-left: 2px;
@@ -658,7 +642,7 @@ webview { width: 100%; height: 100%; display: flex; }
   flex-shrink: 0;
 }
 
-.rounds-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.rounds-label { font-size: var(--font-size-xs); color: var(--text-muted); white-space: nowrap; }
 
 .rounds-btns { display: flex; gap: 4px; }
 
@@ -669,7 +653,7 @@ webview { width: 100%; height: 100%; display: flex; }
   border: 1px solid var(--border);
   background: var(--bg-elevated);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
@@ -730,4 +714,47 @@ webview { width: 100%; height: 100%; display: flex; }
   background: linear-gradient(90deg, var(--accent), var(--conclusion-color));
   border-radius: 1px;
   transition: width 0.5s ease;
+}
+
+/* ─── Stacked Layout ──────────────────────────────────────── */
+.debate-view.stacked {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  overflow-y: auto;
+}
+
+.debate-view.stacked .panel {
+  min-height: 200px;
+}
+
+/* ─── Panel Collapse ──────────────────────────────────────── */
+.panel.collapsed {
+  min-height: 48px;
+  height: auto;
+}
+
+.panel.collapsed .webview-wrap {
+  display: none;
+}
+
+.panel-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.panel-collapse-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ─── Font Size on HTML ───────────────────────────────────── */
+html {
+  font-size: var(--font-size-base);
 }

@@ -1,21 +1,45 @@
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, session, shell, ipcMain } = require('electron');
 const path = require('path');
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
 
+// Hide automation flags
+app.commandLine.appendSwitch('disable-blink-features', 'AutomationControlled');
+
 const CHROME_UA = (() => {
   const os = process.platform;
-  if (os === 'win32') return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
-  if (os === 'linux') return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
-  return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+  const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+  if (os === 'win32') return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+  if (os === 'linux') return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+  return ua;
 })();
+
+app.userAgentFallback = CHROME_UA;
+
+const CH_CLIENT_HINTS = (() => {
+  const os = process.platform;
+  const platform = os === 'darwin' ? 'macOS' : os === 'win32' ? 'Windows' : 'Linux';
+  return {
+    'Sec-CH-UA': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    'Sec-CH-UA-Mobile': '?0',
+    'Sec-CH-UA-Platform': platform,
+    'Sec-CH-UA-Full-Version': '131.0.6778.69',
+  };
+})();
+
 const CSP_OVERRIDE = ["default-src * 'unsafe-inline' 'unsafe-eval' data: blob:"];
+const PARTITIONS = ['persist:chatgpt', 'persist:gemini', 'persist:deepseek', 'persist:perplexity'];
 
 function configureSession(ses, isWebview = false) {
-  // Spoof user-agent so sites don't detect Electron
   ses.setUserAgent(CHROME_UA);
+  ses.webRequest.onBeforeSendHeaders((details, callback) => {
+    const headers = { ...details.requestHeaders };
+    delete headers['X-Client-Data'];
+    delete headers['X-Compression-Mode'];
+    Object.assign(headers, CH_CLIENT_HINTS);
+    callback({ requestHeaders: headers });
+  });
 
-  // Remove restrictive CSP headers so embedded webview pages render correctly
   if (isWebview) {
     ses.webRequest.onHeadersReceived((details, callback) => {
       const headers = { ...details.responseHeaders };
@@ -27,12 +51,18 @@ function configureSession(ses, isWebview = false) {
   }
 }
 
+ipcMain.handle('open-external', (_, url) => shell.openExternal(url));
+
 function createWindow() {
-  // Configure webview partition sessions BEFORE the window is created
-  const partitions = ['persist:chatgpt', 'persist:gemini', 'persist:deepseek', 'persist:perplexity'];
-  
-  partitions.forEach((partition) => {
-    configureSession(session.fromPartition(partition), true);
+  const webviewPreload = path.join(__dirname, 'preload-webview.js');
+  const preloads = [webviewPreload];
+  if (isDev) {
+    preloads.push(path.join(__dirname, 'preload-webview-debug.js'));
+  }
+  PARTITIONS.forEach((partition) => {
+    const ses = session.fromPartition(partition);
+    configureSession(ses, true);
+    ses.setPreloads(preloads);
   });
 
   const isMac = process.platform === 'darwin';
@@ -55,8 +85,6 @@ function createWindow() {
   });
 
   win.webContents.setZoomFactor(1);
-
-  // Also configure the main session (no CSP override — keep app security)
   configureSession(win.webContents.session, false);
 
   const port = process.env.VITE_PORT || 5173;

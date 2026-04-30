@@ -1,6 +1,6 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose minimal API — webview control happens directly in renderer
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
+  openExternal: (url) => ipcRenderer.invoke('open-external', url),
 });

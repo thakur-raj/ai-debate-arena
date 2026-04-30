@@ -127,7 +127,60 @@ const SettingsModal = memo(function SettingsModal({ isOpen, onClose, settings, o
           >
             <option value="dark">Dark Theme</option>
             <option value="light">Light Theme</option>
+            <option value="system">System</option>
           </select>
+        </div>
+
+        {/* Font Size */}
+        <div style={{ marginTop: 20 }}>
+          <label style={{ display: 'block', marginBottom: 8, fontSize: 13, color: 'var(--text-secondary)', fontWeight: 600 }}>
+            Font Size: {localSettings.fontSize || 14}px
+          </label>
+          <input
+            type="range"
+            min={10} max={22} step={1}
+            value={localSettings.fontSize || 14}
+            onChange={e => handleChange('fontSize', parseInt(e.target.value))}
+            style={{
+              width: '100%', cursor: 'pointer',
+              accentColor: 'var(--accent)'
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
+            <span>10px</span>
+            <span>22px</span>
+          </div>
+        </div>
+
+        {/* Layout */}
+        <div style={{ marginTop: 20 }}>
+          <label style={{ display: 'block', marginBottom: 8, fontSize: 13, color: 'var(--text-secondary)', fontWeight: 600 }}>
+            Panel Layout
+          </label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => handleChange('layout', 'side-by-side')}
+              style={{
+                flex: 1, padding: '10px 12px', borderRadius: 8, cursor: 'pointer',
+                border: localSettings.layout === 'side-by-side' ? '1px solid var(--accent)' : '1px solid var(--border)',
+                background: localSettings.layout === 'side-by-side' ? 'var(--accent-soft)' : 'var(--bg-surface)',
+                color: 'var(--text-primary)', fontSize: 13, fontWeight: 600
+              }}
+            >
+              ⊞ Side-by-Side
+            </button>
+            <button
+              onClick={() => handleChange('layout', 'stacked')}
+              style={{
+                flex: 1, padding: '10px 12px', borderRadius: 8, cursor: 'pointer',
+                border: localSettings.layout === 'stacked' ? '1px solid var(--accent)' : '1px solid var(--border)',
+                background: localSettings.layout === 'stacked' ? 'var(--accent-soft)' : 'var(--bg-surface)',
+                color: 'var(--text-primary)', fontSize: 13, fontWeight: 600
+              }}
+            >
+              ⊟ Stacked
+            </button>
+          </div>
         </div>
 
         <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>

@@ -225,11 +225,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
 
     // ── Round 0: Send initial prompt to all ──
     setStatus(DEBATE_STATUS.SENDING_INITIAL);
+    const ea = enabledAIsRef.current;
     setAiStatuses({
-      chatgpt: 'thinking',
-      gemini: 'thinking',
-      deepseek: 'thinking',
-      perplexity: 'thinking'
+      chatgpt: ea?.chatgpt ? 'thinking' : 'idle',
+      gemini: ea?.gemini ? 'thinking' : 'idle',
+      deepseek: ea?.deepseek ? 'thinking' : 'idle',
+      perplexity: ea?.perplexity ? 'thinking' : 'idle',
     });
 
     // Capture baseline message count before sending anything
@@ -261,17 +262,17 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
   const runCrossShareRound = async (prevRound, roundNum, maxRounds) => {
     if (roundNum > maxRounds) {
       setStatus(DEBATE_STATUS.COMPLETE);
-      setAiStatuses({ chatgpt: 'done', gemini: 'done', deepseek: 'done', perplexity: 'done' });
+      const doneEa = enabledAIsRef.current;
+      setAiStatuses({
+        chatgpt: doneEa?.chatgpt ? 'done' : 'idle',
+        gemini: doneEa?.gemini ? 'done' : 'idle',
+        deepseek: doneEa?.deepseek ? 'done' : 'idle',
+        perplexity: doneEa?.perplexity ? 'done' : 'idle',
+      });
       return;
     }
 
     setStatus(DEBATE_STATUS.CROSS_SHARING);
-    setAiStatuses({
-      chatgpt: 'thinking',
-      gemini: 'thinking',
-      deepseek: 'thinking',
-      perplexity: 'thinking'
-    });
 
     const chatgptCrossPrompt = buildCrossPrompt('chatgpt', promptRef.current, prevRound, roundNum - 1);
     const geminiCrossPrompt = buildCrossPrompt('gemini', promptRef.current, prevRound, roundNum - 1);
@@ -281,6 +282,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
     // Capture baseline message count before sending cross prompts
     const baseCounts = await getBaseCounts();
     const ea = enabledAIsRef.current;
+    setAiStatuses({
+      chatgpt: ea?.chatgpt ? 'thinking' : 'idle',
+      gemini: ea?.gemini ? 'thinking' : 'idle',
+      deepseek: ea?.deepseek ? 'thinking' : 'idle',
+      perplexity: ea?.perplexity ? 'thinking' : 'idle',
+    });
 
     if (delayRef.current > 0) await sleep(delayRef.current * 1000);
     if (ea?.chatgpt) await exec(chatgptRef, chatgptSend(chatgptCrossPrompt));
@@ -335,16 +342,16 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
       `Be thorough, fair, and conclusive. This is your final word on the matter.`;
 
     setStatus(DEBATE_STATUS.WAITING_ROUND);
-    setAiStatuses({
-      chatgpt: 'thinking',
-      gemini: 'thinking',
-      deepseek: 'thinking',
-      perplexity: 'thinking'
-    });
 
     // Capture baseline message count before concluding
     const baseCounts = await getBaseCounts();
     const ea = enabledAIsRef.current;
+    setAiStatuses({
+      chatgpt: ea?.chatgpt ? 'thinking' : 'idle',
+      gemini: ea?.gemini ? 'thinking' : 'idle',
+      deepseek: ea?.deepseek ? 'thinking' : 'idle',
+      perplexity: ea?.perplexity ? 'thinking' : 'idle',
+    });
 
     if (delayRef.current > 0) await sleep(delayRef.current * 1000);
     if (ea?.chatgpt) await exec(chatgptRef, chatgptSend(concludePrompt));
@@ -364,11 +371,12 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
         { round: 999, label: '🏁 Final Verdict', isFinalVerdict: true, ...responses },
       ]);
       setStatus(DEBATE_STATUS.COMPLETE);
+      const finalEa = enabledAIsRef.current;
       setAiStatuses({
-        chatgpt: 'done',
-        gemini: 'done',
-        deepseek: 'done',
-        perplexity: 'done'
+        chatgpt: finalEa?.chatgpt ? 'done' : 'idle',
+        gemini: finalEa?.gemini ? 'done' : 'idle',
+        deepseek: finalEa?.deepseek ? 'done' : 'idle',
+        perplexity: finalEa?.perplexity ? 'done' : 'idle',
       });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -403,15 +411,15 @@ export function useDebateOrchestrator(chatgptRef, geminiRef, deepseekRef, perple
       `This is a structured AI vs AI debate. Be sharp, assertive, and decisive.\n` +
       `Acknowledge these rules briefly and say you are ready. Then WAIT for the first question.`;
 
+    const ea = enabledAIsRef.current;
     setAiStatuses({
-      chatgpt: 'thinking',
-      gemini: 'thinking',
-      deepseek: 'thinking',
-      perplexity: 'thinking'
+      chatgpt: ea?.chatgpt ? 'thinking' : 'idle',
+      gemini: ea?.gemini ? 'thinking' : 'idle',
+      deepseek: ea?.deepseek ? 'thinking' : 'idle',
+      perplexity: ea?.perplexity ? 'thinking' : 'idle',
     });
 
     const delay = settings?.delay || 0;
-    const ea = enabledAIsRef.current;
     if (delay > 0) await sleep(delay * 1000);
     if (ea?.chatgpt) await exec(chatgptRef, chatgptSend(prep));
 

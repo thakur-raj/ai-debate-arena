@@ -51,6 +51,8 @@
       "dist/**/*",
       "main.js",
       "preload.js",
+      "preload-webview.js",
+      "preload-webview-debug.js",
       "assets/**/*",
       "package.json"
     ],

@@ -19,7 +19,9 @@ export default function App() {
     rounds: 2,
     delay: 2,
     detailMode: 1,
-    theme: 'light'
+    theme: 'light',
+    fontSize: 14,
+    layout: 'side-by-side'
   };
 
   const [settings, setSettings] = useState(() => {
@@ -35,8 +37,21 @@ export default function App() {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', settings.theme || 'light');
+    const theme = settings.theme;
+    if (theme === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+      const handler = (e) => document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
   }, [settings.theme]);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--font-size-base', `${settings.fontSize}px`);
+  }, [settings.fontSize]);
   const [showSettings, setShowSettings] = useState(false);
   const [enabledAIs, setEnabledAIs] = useState({ chatgpt: true, gemini: true, deepseek: true, perplexity: true });
   const [activeTab, setActiveTab] = useState('debate'); // 'debate' or 'results'
@@ -82,7 +97,7 @@ export default function App() {
 
       <div className="panels-area">
         {/* Debate View - Always mounted but hidden when not active */}
-        <div className={`debate-view ${activeTab === 'debate' ? 'active' : 'hidden'}`}>
+        <div className={`debate-view ${activeTab === 'debate' ? 'active' : 'hidden'} ${settings.layout === 'stacked' ? 'stacked' : ''}`}>
           <WebviewPanel
             ref={chatgptRef}
             id="chatgpt-webview"
